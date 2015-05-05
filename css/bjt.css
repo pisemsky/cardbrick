@@ -1,0 +1,61 @@
+body {
+    margin: 0;
+    background: #ffffff;
+}
+
+#field {
+    position: relative;
+    width: 304px;
+    height: 408px;
+    margin: 0 auto;
+}
+
+.grid {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+    z-index: 20;
+}
+
+.grid td {
+    border: solid 1px #eeeeec;
+}
+
+.card {
+    position: absolute;
+    width: 38px;
+    height: 51px;
+    line-height: 51px;
+    font-family: 'Droid Sans';
+    font-size: 20px;
+    text-align: center;
+    background: #ffffff;
+    z-index: 10;
+}
+
+.card.clubs:after {
+    content: '\2663';
+}
+
+.card.diamonds:after {
+    content: '\2666';
+}
+
+.card.hearts:after {
+    content: '\2665';
+}
+
+.card.spades:after {
+    content: '\2660';
+}
+
+.card.clubs, .card.spades {
+    color: #000000;
+}
+
+.card.diamonds, .card.hearts {
+    color: #ff0000;
+}
