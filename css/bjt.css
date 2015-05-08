@@ -3,32 +3,29 @@ body {
     background: #ffffff;
 }
 
-#field {
+.field {
     position: relative;
-    width: 304px;
-    height: 408px;
-    margin: 0 auto;
+    width: 409px;
+    height: 569px;
+    margin: 10px auto 0;
 }
 
-.grid {
+.field:before {
+    content: '';
     position: absolute;
     left: 0;
+    top: 0;
+    right: 0;
     bottom: 0;
-    width: 100%;
-    height: 100%;
-    border-collapse: collapse;
-    z-index: 20;
-}
-
-.grid td {
-    border: solid 1px #eeeeec;
+    border: solid 1px lightgray;
 }
 
 .card {
     position: absolute;
-    width: 38px;
-    height: 51px;
-    line-height: 51px;
+    width: 50px;
+    height: 70px;
+    line-height: 70px;
+    border: solid 1px lightgray;
     font-family: 'Droid Sans';
     font-size: 20px;
     text-align: center;

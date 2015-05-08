@@ -13,13 +13,17 @@ var BJT = (function () {
     };
 
     var Field = function () {
+        this.id = 'field';
         this.rows = 8;
         this.cols = 8;
+        this.border = 1;
         this.initX = 3;
         this.initY = 0;
         this.cards = [];
-        this.element = document.getElementById('field');
+        this.cardClass = 'card';
+        this.element = document.getElementById(this.id);
 
+        // Resets field and prepares it to the game.
         this.reset = function () {
             for (i = 0; i < this.rows; i++) {
                 if (!(i in this.cards)) {
@@ -37,7 +41,9 @@ var BJT = (function () {
             }
         };
 
-        // Двигает карту вниз до конца и возвращает пропущеных строк.
+        // Moves the card maximally down and returns a number of skipped
+        // rows.
+        // TODO: Add debounce.
         this.moveCardDown = function (card) {
             var rows = 0;
             while (true) {
@@ -51,8 +57,8 @@ var BJT = (function () {
             return rows;
         }
 
-        // Двигает карту вправо и возвращает true. Если сдвинуть карту
-        // невозможно, возвращает false.
+        // Moves the card to the right and return true. Otherwise
+        // returns false.
         this.moveCardRight = function (card) {
             if (card.x < (this.cols - 1) && this.cards[card.y][card.x + 1] == null) {
                 this.cards[card.y][card.x + 1] = card;
@@ -63,8 +69,8 @@ var BJT = (function () {
             return false;
         }
 
-        // Двигает карту влево и возвращает true. Если сдвинуть карту
-        // невозможно, возвращает false.
+        // Moves the card to the left and return true. Otherwise returns
+        // false.
         this.moveCardLeft = function (card) {
             if (card.x > 0 && this.cards[card.y][card.x - 1] == null) {
                 this.cards[card.y][card.x - 1] = card;
@@ -75,8 +81,8 @@ var BJT = (function () {
             return false;
         }
 
-        // Опускает карту на одну строку и возвращает true. Если карту
-        // опустить невозможно, возвращает false.
+        // Moves the card down by one row and returns true. If the card
+        // is not moved, return false.
         this.lowerCard = function (card) {
             if (card.y < (this.rows - 1) && this.cards[card.y + 1][card.x] == null) {
                 this.cards[card.y + 1][card.x] = card;
@@ -87,15 +93,15 @@ var BJT = (function () {
             return false;
         };
 
-        // Добавляет карту и задаёт ей начальные координаты. Если
-        // добавление невозможно, возвращает false.
+        // Adds the card to the field, setups it's initial coordinates
+        // and returns true. If adding is not possible, returns false.
         this.addCard = function (card) {
             if (this.cards[this.initY][this.initX] == null) {
                 card.x = this.initX;
                 card.y = this.initY;
                 card.element = document.createElement('div');
                 card.element.textContent = card.rank;
-                card.element.className = 'card ' + card.suit;
+                card.element.className = this.cardClass + ' ' + card.suit;
                 this.cards[this.initY][this.initX] = card;
                 return true;
             }
@@ -108,8 +114,10 @@ var BJT = (function () {
                     var card = this.cards[i][j];
                     if (card) {
                         this.element.appendChild(card.element);
-                        card.element.style.left = (card.element.offsetWidth * card.x) + 'px';
-                        card.element.style.top = (card.element.offsetHeight * card.y) + 'px';
+                        var left = card.element.offsetWidth * card.x - this.border * card.x;
+                        var top = card.element.offsetHeight * card.y - this.border * card.y;
+                        card.element.style.left = left + 'px';
+                        card.element.style.top = top + 'px';
                     }
                 }
             }
@@ -127,7 +135,6 @@ var BJT = (function () {
         this.started = false;
         this.paused = false;
 
-        // Инициализирует игровое поле, устанавливает обработчики.
         this.init = function () {
             this.field = new Field();
             var self = this;
@@ -150,50 +157,22 @@ var BJT = (function () {
             }
         };
 
-        // Главный цикл игры
-        this.main = function () {
-            // Если игра уже идёт, двигаем карту вниз.
-            if (this.currentCard) {
-                var lower = this.field.lowerCard(this.currentCard);
-            }
-            // Если карта не двигается или игра только началась,
-            // назначаем новую и добавляем на игровое поле.
-            if (!lower || !this.currentCard) {
-                this.currentCard = this.nextCard();
-                if (!this.field.addCard(this.currentCard)) {
-                    this.stop();
-                }
-            }
-            this.field.draw();
-        };
-
-        // Начинает игру
         this.start = function () {
             if (this.started) {
                 return;
             }
-            this.cards = this.createCards();
-            this.field.reset();
-            this.currentCard = null;
-            // TODO: разобраться со скоростью!
 
-            this.main();
+            // TODO: reset score and other stuff from previous game.
 
-            this.started = true;
-            var self = this;
-            this.mainLoop = setInterval(function () {
-                self.main.call(self);
-            }, this.speed);
+            this.startLevel();
         };
 
-        // Завершает игру (проигрыш)
         this.stop = function () {
             clearInterval(this.mainLoop);
             console.log('Game over!');
             this.started = false;
         };
 
-        // Приостанавливает игру
         this.pause = function () {
             if (this.started) {
                 if (this.paused) {
@@ -226,11 +205,44 @@ var BJT = (function () {
         this.down = function () {
             if (this.started && !this.paused) {
                 this.field.moveCardDown(this.currentCard);
-                // TODO: следюущая итерация должна запускаться со
-                // сбросом таймера.
+
                 this.main();
+                // TODO: restart main loop.
+
                 this.field.draw();
             }
+        };
+
+        this.startLevel = function () {
+            if (this.mainLoop) {
+                clearInterval(this.mainLoop);
+            }
+
+            // TODO: calculate new speed.
+
+            this.cards = this.createCards();
+            this.field.reset();
+            this.currentCard = null;
+
+            this.main();
+            this.startLoop(this.speed);
+        };
+
+        this.startLoop = function (speed) {
+            var self = this;
+            this.mainLoop = setInterval(function () {
+                self.main.call(self);
+            }, speed);
+        };
+
+        this.nextCard = function () {
+            if (this.cards.length > 0) {
+                var key = Math.floor(Math.random() * this.cards.length);
+                var card = this.cards[key];
+                this.cards.splice(key, 1);
+                return card;
+            }
+            return null;
         };
 
         this.createCards = function () {
@@ -243,17 +255,33 @@ var BJT = (function () {
             return cards;
         };
 
-        this.nextCard = function () {
-            if (this.cards.length > 0) {
-                var key = Math.floor(Math.random() * this.cards.length);
-                var card = this.cards[key];
-                this.cards.splice(key, 1);
-                return card;
+        this.main = function () {
+            if (!this.started) {
+                this.started = true;
             }
+            // If there is current card, move it down.
+            if (this.currentCard) {
+                var lower = this.field.lowerCard(this.currentCard);
+            }
+            // If unable to move card or there is no card, get new card.
+            if (!lower || !this.currentCard) {
+                this.currentCard = this.nextCard();
+                // If no more cards, start new level.
+                if (!this.currentCard) {
+                    this.startLevel();
+                    return;
+                }
+                // If card is not added to the field, stop game.
+                if (!this.field.addCard(this.currentCard)) {
+                    this.stop();
+                }
+            }
+            // Redraw field.
+            this.field.draw();
         };
     };
     return {
-        test: function () {
+        init: function () {
             new Game().init();
         }
     };
