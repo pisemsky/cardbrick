@@ -7,13 +7,12 @@ var BJT = (function () {
         this.element = null;
         this.points = (function () {
             if (rank == 'J' || rank == 'Q' || rank == 'K') return 10;
-            if (rank == 'A') return 11;
+            if (rank == 'A') return 1;
             return parseInt(rank);
         })();
     };
 
     var Field = function () {
-        this.id = 'field';
         this.rows = 8;
         this.cols = 8;
         this.border = 1;
@@ -21,7 +20,7 @@ var BJT = (function () {
         this.initY = 0;
         this.cards = [];
         this.cardClass = 'card';
-        this.element = document.getElementById(this.id);
+        this.element = document.getElementById('field');
 
         // Resets field and prepares it to the game.
         this.reset = function () {
@@ -41,9 +40,46 @@ var BJT = (function () {
             }
         };
 
+        this.removeCards = function (cards) {
+            for (key in cards) {
+                var card = cards[key];
+                this.element.removeChild(card.element);
+                this.cards[card.y][card.x] = null;
+                for (y = card.y - 1; y >= 0; y--) {
+                    var cardAbove = this.cards[y][card.x];
+                    if (cardAbove) {
+                        this.lowerCard(cardAbove);
+                    }
+                }
+            }
+        };
+
+        this.findBlackjack = function () {
+            for (i = this.rows - 1; i >= 0; i--) {
+                for (j = 0; j < this.cols; j++) {
+                    var sequence = [];
+                    var sequenceSum = 0;
+                    for (k = j; k < this.cols; k++) {
+                        var card = this.cards[i][k];
+                        if (card) {
+                            sequence.push(card);
+                            sequenceSum += card.points;
+                            if (sequenceSum == 21) {
+                                return sequence;
+                            }
+                            if (sequenceSum < 21) {
+                                continue;
+                            }
+                        }
+                        sequence = [];
+                        sequenceSum = 0;
+                    }
+                }
+            }
+        };
+
         // Moves the card maximally down and returns a number of skipped
         // rows.
-        // TODO: Add debounce.
         this.moveCardDown = function (card) {
             var rows = 0;
             while (true) {
@@ -128,20 +164,30 @@ var BJT = (function () {
         this.ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
         this.suits = ['clubs', 'diamonds', 'hearts', 'spades'];
         this.cards = [];
-        this.field = null;
+        this.blackjacks = 0;
+        this.level = 1;
+        this.score = 0;
+        this.field = new Field();
         this.currentCard = null;
-        this.speed = 500;
         this.mainLoop = null;
         this.started = false;
         this.paused = false;
+        this.nextBlackjack = null;
 
-        this.init = function () {
-            this.field = new Field();
+        this.pauseScreen = document.getElementById('pause');
+        this.gameoverScreen = document.getElementById('gameover');
+
+        this.cardsElement = document.getElementById('cards');
+        this.blackjacksElement = document.getElementById('blackjacks');
+        this.levelElement = document.getElementById('level');
+        this.scoreElement = document.getElementById('score');
+
+        (function () {
             var self = this;
             window.onkeydown = function (event) {
                 self.dispatchControls.call(self, event);
             };
-        };
+        }).call(this);
 
         this.dispatchControls = function (event) {
             if (event.keyCode == '37') { // Left arrow
@@ -151,7 +197,7 @@ var BJT = (function () {
             } else if (event.keyCode == '32') { // Space
                 this.down();
             } else if (event.keyCode == '80') { // P
-                this.pause();
+                this.throttle(this.pause, 1000);
             } else if (event.keyCode == '13') { // Enter
                 this.start();
             }
@@ -161,29 +207,28 @@ var BJT = (function () {
             if (this.started) {
                 return;
             }
-
-            // TODO: reset score and other stuff from previous game.
-
+            this.showScreen(this.field.element);
+            this.level = 1;
+            this.score = 0;
             this.startLevel();
         };
 
         this.stop = function () {
-            clearInterval(this.mainLoop);
-            console.log('Game over!');
+            this.stopLoop();
             this.started = false;
+            this.showScreen(this.gameoverScreen);
         };
 
         this.pause = function () {
             if (this.started) {
                 if (this.paused) {
-                    var self = this;
-                    this.mainLoop = setInterval(function () {
-                        self.main.call(self);
-                    }, this.speed);
                     this.paused = false;
+                    this.startLoop();
+                    this.showScreen(this.field.element);
                 } else {
-                    clearInterval(this.mainLoop);
+                    this.stopLoop();
                     this.paused = true;
+                    this.showScreen(this.pauseScreen);
                 }
             }
         };
@@ -204,35 +249,60 @@ var BJT = (function () {
 
         this.down = function () {
             if (this.started && !this.paused) {
-                this.field.moveCardDown(this.currentCard);
-
+                this.stopLoop();
+                var bonus = this.field.moveCardDown(this.currentCard);
+                this.score += bonus;
+                console.log(bonus);
                 this.main();
-                // TODO: restart main loop.
-
-                this.field.draw();
+                if (this.started) {
+                    this.startLoop();
+                }
             }
+        };
+
+        this.throttle = function (callable, time) {
+            var self = this;
+            if (typeof(callable.throttle) == 'undefined') {
+                callable.call(self);
+                callable.throttle = setTimeout(function () {
+                    delete(callable.throttle);
+                }, time);
+            }
+        };
+
+        this.showScreen = function (screenElement) {
+            this.field.element.style.display = 'none';
+            this.pauseScreen.style.display = 'none';
+            this.gameoverScreen.style.display = 'none';
+            screenElement.style.display = '';
         };
 
         this.startLevel = function () {
             if (this.mainLoop) {
-                clearInterval(this.mainLoop);
+                this.stopLoop();
             }
 
-            // TODO: calculate new speed.
-
             this.cards = this.createCards();
+            this.blackjacks = 0;
             this.field.reset();
             this.currentCard = null;
 
             this.main();
-            this.startLoop(this.speed);
+            this.startLoop();
         };
 
         this.startLoop = function (speed) {
+            this.stopLoop();
             var self = this;
             this.mainLoop = setInterval(function () {
                 self.main.call(self);
-            }, speed);
+            }, this.getInterval());
+        };
+
+        this.stopLoop = function () {
+            if (this.mainLoop) {
+                clearInterval(this.mainLoop);
+            }
         };
 
         this.nextCard = function () {
@@ -255,6 +325,17 @@ var BJT = (function () {
             return cards;
         };
 
+        this.updateInfo = function () {
+            this.cardsElement.textContent = this.cards.length;
+            this.blackjacksElement.textContent = this.blackjacks;
+            this.levelElement.textContent = this.level;
+            this.scoreElement.textContent = this.score;
+        };
+
+        this.getInterval = function () {
+            return Math.round(1/Math.sqrt(this.level)*1000);
+        };
+
         this.main = function () {
             if (!this.started) {
                 this.started = true;
@@ -263,8 +344,27 @@ var BJT = (function () {
             if (this.currentCard) {
                 var lower = this.field.lowerCard(this.currentCard);
             }
-            // If unable to move card or there is no card, get new card.
-            if (!lower || !this.currentCard) {
+            // If there is no card or unable to move card, calculate
+            // score.
+            if (!this.currentCard || !lower) {
+                // Find blackjack.
+                var blackjack = this.nextBlackjack || this.field.findBlackjack();
+                if (blackjack) {
+                    this.blackjacks += 1;
+                    this.score += 21;
+                    this.field.removeCards(blackjack);
+                    // Increase level if necessary.
+                    if (this.blackjacks % 7 === 0) {
+                        this.stopLoop();
+                        this.level += 1;
+                        this.startLoop();
+                    }
+                    // Check if there is another blackjack.
+                    this.nextBlackjack = this.field.findBlackjack();
+                    if (this.nextBlackjack) {
+                        return;
+                    }
+                }
                 this.currentCard = this.nextCard();
                 // If no more cards, start new level.
                 if (!this.currentCard) {
@@ -274,15 +374,18 @@ var BJT = (function () {
                 // If card is not added to the field, stop game.
                 if (!this.field.addCard(this.currentCard)) {
                     this.stop();
+                    return;
                 }
             }
+            // Update info.
+            this.updateInfo();
             // Redraw field.
             this.field.draw();
         };
     };
     return {
         init: function () {
-            new Game().init();
+            new Game();
         }
     };
 }());

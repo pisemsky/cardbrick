@@ -1,16 +1,60 @@
 body {
     margin: 0;
-    background: #ffffff;
+    background: white;
 }
 
-.field {
+.container {
+    position: relative;
+    width: 800px;
+    height: 600px;
+    margin: 0 auto;
+    overflow: hidden;
+    font-family: 'Droid Sans';
+}
+
+.left {
+    position: absolute;
+    left: 0;
+    top: 15px;
+    width: 180px;
+}
+
+.middle {
+    width: 409px;
+    height: 569px;
+    margin: 15px auto 0;
+    overflow: hidden;
+}
+
+.right {
+    position: absolute;
+    right: 0;
+    top: 15px;
+    width: 180px;
+}
+
+.row {
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    line-height: 15px;
+    font-size: 15px;
+    border-bottom: solid 1px lightgray;
+}
+
+.row-value {
+    float: right;
+    font-weight: bold;
+}
+
+.screen {
     position: relative;
     width: 409px;
     height: 569px;
-    margin: 10px auto 0;
+    line-height: 569px;
+    text-align: center;
 }
 
-.field:before {
+.screen:before {
     content: '';
     position: absolute;
     left: 0;
@@ -20,16 +64,23 @@ body {
     border: solid 1px lightgray;
 }
 
+.screen-text {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 20px;
+    line-height: 30px;
+    text-transform: uppercase;
+}
+
 .card {
     position: absolute;
     width: 50px;
     height: 70px;
     line-height: 70px;
     border: solid 1px lightgray;
-    font-family: 'Droid Sans';
     font-size: 20px;
     text-align: center;
-    background: #ffffff;
+    background: white;
     z-index: 10;
 }
 
@@ -50,9 +101,9 @@ body {
 }
 
 .card.clubs, .card.spades {
-    color: #000000;
+    color: black;
 }
 
 .card.diamonds, .card.hearts {
-    color: #ff0000;
+    color: red;
 }

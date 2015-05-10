@@ -1,12 +1,58 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
     <head>
         <meta charset="utf-8">
         <title>Blackjack Tetris</title>
         <link href="css/bjt.css" rel="stylesheet">
     </head>
     <body>
-        <div class="field" id="field"></div>
+        <div class="container">
+            <div class="left">
+                <div class="row">
+                    Начать игру
+                    <div class="row-value">Enter</div>
+                </div>
+                <div class="row">
+                    Сдвинуть карту
+                    <div class="row-value">&#8592; &#8594;</div>
+                </div>
+                <div class="row">
+                    Опустить карту
+                    <div class="row-value">Space</div>
+                </div>
+                <div class="row">
+                    Пауза
+                    <div class="row-value">P</div>
+                </div>
+            </div>
+            <div class="middle">
+                <div class="screen" id="field"></div>
+                <div class="screen" id="pause">
+                    <div class="screen-text">Пауза</div>
+                </div>
+                <div class="screen" id="gameover">
+                    <div class="screen-text">Игра окончена</div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="row">
+                    Карт
+                    <div class="row-value" id="cards">0</div>
+                </div>
+                <div class="row">
+                    Блекджеков
+                    <div class="row-value" id="blackjacks">0</div>
+                </div>
+                <div class="row">
+                    Уровень
+                    <div class="row-value" id="level">1</div>
+                </div>
+                <div class="row">
+                    Счёт
+                    <div class="row-value" id="score">0</div>
+                </div>
+            </div>
+        </div>
         <script src="js/bjt.js"></script>
         <script>
         BJT.init();
