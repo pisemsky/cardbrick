@@ -1,109 +1,124 @@
 body {
     margin: 0;
-    background: white;
+    background: #ffffff;
 }
 
-.container {
-    position: relative;
-    width: 800px;
-    height: 600px;
+.table {
+    width: 1344px;
+    height: 800px;
     margin: 0 auto;
-    overflow: hidden;
-    font-family: 'Open Sans', sans-serif;
+    background: url('../img/back_a.png');
+    box-shadow: inset 0 0 16px 0 #ffffff;
 }
 
-.left {
-    position: absolute;
-    left: 0;
-    top: 15px;
-    width: 180px;
-}
-
-.middle {
-    width: 409px;
-    height: 569px;
-    margin: 15px auto 0;
-    overflow: hidden;
-}
-
-.right {
-    position: absolute;
-    right: 0;
-    top: 15px;
-    width: 180px;
-}
-
-.row {
-    padding-bottom: 5px;
-    margin-bottom: 15px;
-    line-height: 15px;
-    font-size: 15px;
-    border-bottom: solid 1px lightgray;
-}
-
-.row-value {
-    float: right;
-    font-weight: bold;
-}
-
-.screen {
+.field {
     position: relative;
-    width: 409px;
-    height: 569px;
-    line-height: 569px;
-    text-align: center;
+    width: 1280px;
+    height: 768px;
+    padding-top: 16px;
+    margin: 0 auto;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto 300px;
 }
 
-.screen:before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    border: solid 1px lightgray;
+.field.spades {
+    background-image: url('../img/mark_a.png');
 }
 
-.screen-text {
-    display: inline-block;
-    vertical-align: middle;
-    font-size: 20px;
-    line-height: 30px;
-    text-transform: uppercase;
+.field.clubs {
+    background-image: url('../img/mark_b.png');
+}
+
+.field.diamonds {
+    background-image: url('../img/mark_c.png');
+}
+
+.field.hearts {
+    background-image: url('../img/mark_d.png');
 }
 
 .card {
     position: absolute;
-    width: 50px;
-    height: 70px;
-    line-height: 70px;
-    border: solid 1px lightgray;
-    font-size: 20px;
+    width: 128px;
+    height: 192px;
+}
+
+.card-inner {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    border: solid 1px #f3f3f3;
+    border-radius: 8px;
+    background: url('../img/logo_b.png') center no-repeat #ffffff;
+}
+
+.card-top, .card-bottom {
+    position: absolute;
+    line-height: 1;
+}
+
+.card-top {
+    top: 0;
+    left: 12px;
+}
+
+.card-bottom {
+    bottom: 0;
+    right: 12px;
+    text-align: right;
+}
+
+.card-rank {
+    vertical-align: middle;
+    font-family: 'Engravers', sans-serif;
+    font-size: 32px;
+}
+
+.card-suit {
+    vertical-align: middle;
+    font-family: 'MS Gothic', 'Arial', sans-serif;
+    font-size: 24px;
+}
+
+.card.empty .card-inner {
+    background: #ffff00;
+    border-color: #f2f200;
+}
+
+.card.empty .card-top, .card.empty .card-bottom {
+    display: none;
+}
+
+.card.blackjack .card-inner {
+    background: url('../img/logo_a.png') center no-repeat #ffffff;
+    background-size: auto 88px;
+}
+
+.card.blackjack .card-top, .card.blackjack .card-bottom {
+    display: none;
+}
+
+.status {
+    display: none;
+    line-height: 64px;
+    font-family: 'Engravers', sans-serif;
+    font-size: 32px;
     text-align: center;
-    background: white;
-    z-index: 10;
 }
 
-.card.clubs:after {
-    content: '\2663';
+.screen.initial .status.initial,
+.screen.started .status.started,
+.screen.paused .status.paused,
+.screen.stopped .status.stopped {
+    display: block;
 }
 
-.card.diamonds:after {
-    content: '\2666';
+.highlight {
+    color: #ff0000;
 }
 
-.card.hearts:after {
-    content: '\2665';
-}
-
-.card.spades:after {
-    content: '\2660';
-}
-
-.card.clubs, .card.spades {
-    color: black;
-}
-
-.card.diamonds, .card.hearts {
-    color: red;
+.control {
+    cursor: pointer;
 }

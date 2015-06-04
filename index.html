@@ -1,57 +1,39 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <title>Blackjack Tetris</title>
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700&subset=latin,cyrillic,latin-ext,cyrillic-ext' rel='stylesheet' type='text/css'>
+        <link href="fonts/Engravers/Engravers.css" rel="stylesheet">
         <link href="css/bjt.css" rel="stylesheet">
     </head>
     <body>
-        <div class="container">
-            <div class="left">
-                <div class="row">
-                    Начать игру
-                    <div class="row-value">Enter</div>
-                </div>
-                <div class="row">
-                    Сдвинуть карту
-                    <div class="row-value">&#8592; &#8594;</div>
-                </div>
-                <div class="row">
-                    Опустить карту
-                    <div class="row-value">Space</div>
-                </div>
-                <div class="row">
-                    Пауза
-                    <div class="row-value">P</div>
+        <div id="screen" class="screen initial">
+            <div class="table">
+                <div id="field" class="field spades">
+                    <div class="card empty" style="position: absolute; left: 256px; top: -176px;"><div class="card-inner"></div></div>
+                    <div class="card empty" style="position: absolute; left: 256px; top: -177px;"><div class="card-inner"></div></div>
+                    <div class="card empty" style="position: absolute; left: 256px; top: -178px;"><div class="card-inner"></div></div>
+                    <div class="card empty" style="position: absolute; left: 256px; top: -179px;"><div class="card-inner"></div></div>
+                    <div class="card empty" style="position: absolute; left: 256px; top: -180px;"><div class="card-inner"></div></div>
+                    <div class="card empty" style="position: absolute; left: 256px; top: -181px;"><div class="card-inner"></div></div>
                 </div>
             </div>
-            <div class="middle">
-                <div class="screen" id="field"></div>
-                <div class="screen" id="pause">
-                    <div class="screen-text">Пауза</div>
-                </div>
-                <div class="screen" id="gameover">
-                    <div class="screen-text">Игра окончена</div>
-                </div>
+            <div class="status initial">
+                <span id="start" class="highlight control">play</span>
             </div>
-            <div class="right">
-                <div class="row">
-                    Карт
-                    <div class="row-value" id="cards">0</div>
-                </div>
-                <div class="row">
-                    Блекджеков
-                    <div class="row-value" id="blackjacks">0</div>
-                </div>
-                <div class="row">
-                    Уровень
-                    <div class="row-value" id="level">1</div>
-                </div>
-                <div class="row">
-                    Счёт
-                    <div class="row-value" id="score">0</div>
-                </div>
+            <div class="status started">
+                <span id="deck-count"></span>
+                deck
+                <span class="highlight">
+                    <span id="blackjacks"></span>/<span id="level-blackjacks"></span>
+                </span>
+                bjt
+            </div>
+            <div class="status paused">
+                pause
+            </div>
+            <div class="status stopped">
+                game over
             </div>
         </div>
         <script src="js/bjt.js"></script>
