@@ -22,6 +22,7 @@ var BJT = (function () {
         this.blackjacksElement = document.getElementById('blackjacks');
         this.levelBlackjacksElement = document.getElementById('level-blackjacks');
         this.deckCountElement = document.getElementById('deck-count');
+        this.deckCountSuffixElement = document.getElementById('deck-count-suffix');
 
         this.getFieldPaddingTop = function () {
             var style = window.getComputedStyle(this.fieldElement);
@@ -31,6 +32,9 @@ var BJT = (function () {
         this.cardElement = function (card) {
             var container = document.createElement('div');
             container.className = 'card';
+            if (card.suit == '&diams;' || card.suit == '&hearts;') {
+                container.className += ' highlight';
+            }
             var inner = document.createElement('div');
             inner.className = 'card-inner';
             var top = document.createElement('div');
@@ -66,6 +70,16 @@ var BJT = (function () {
         };
 
         this.setDeckCount = function (value) {
+            if (value == 1) {
+                var suffix = 'st';
+            } else if (value == 2) {
+                var suffix = 'nd';
+            } else if (value == 3) {
+                var suffix = 'rd';
+            } else {
+                var suffix = 'th';
+            }
+            this.deckCountSuffixElement.textContent = suffix;
             this.deckCountElement.textContent = value;
         };
 

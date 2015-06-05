@@ -9,7 +9,7 @@
     <body>
         <div id="screen" class="screen initial">
             <div class="table">
-                <div id="field" class="field spades">
+                <div id="field" class="field started spades">
                     <div class="card empty" style="position: absolute; left: 256px; top: -176px;"><div class="card-inner"></div></div>
                     <div class="card empty" style="position: absolute; left: 256px; top: -177px;"><div class="card-inner"></div></div>
                     <div class="card empty" style="position: absolute; left: 256px; top: -178px;"><div class="card-inner"></div></div>
@@ -17,23 +17,43 @@
                     <div class="card empty" style="position: absolute; left: 256px; top: -180px;"><div class="card-inner"></div></div>
                     <div class="card empty" style="position: absolute; left: 256px; top: -181px;"><div class="card-inner"></div></div>
                 </div>
+                <div class="field initial">
+                    <div class="card big">
+                        <div class="card-inner">
+                            <div class="card-top">
+                                <span class="card-rank">J</span><span class="card-suit">&spades;</span>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="card-rank">J</span><span class="card-suit">&spades;</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field paused">
+                    <div class="card big empty">
+                        <div class="card-inner">
+                            <div class="card-center">pause</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field stopped">
+                    <div class="card big empty">
+                        <div class="card-inner">
+                            <div class="card-center">game over</div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="status initial">
-                <span id="start" class="highlight control">play</span>
+                press <span class="highlight">enter</span> to play
             </div>
-            <div class="status started">
-                <span id="deck-count"></span>
+            <div class="status started paused stopped">
+                <span id="deck-count"></span><span id="deck-count-suffix"></span>
                 deck
                 <span class="highlight">
                     <span id="blackjacks"></span>/<span id="level-blackjacks"></span>
                 </span>
                 bjt
-            </div>
-            <div class="status paused">
-                pause
-            </div>
-            <div class="status stopped">
-                game over
             </div>
         </div>
         <script src="js/bjt.js"></script>
