@@ -4,20 +4,17 @@ var BJT = (function () {
         this.suit = suit;
         this.x = null;
         this.y = null;
+        this.value = null;
+        this.deckRow = null;
         this.element = null;
-        this.getPoints = function () {
-            if (rank == 'J' || rank == 'Q' || rank == 'K') return 10;
-            if (rank == 'A') return 1;
-            return parseInt(rank);
-        };
     };
 
-    var Screen = function (cols, rows, cards) {
-        this.cols = cols;
-        this.rows = rows;
-        this.cards = cards;
+    var Screen = function (game) {
+        this.game = game;
+        this.deckRowsStep = 2;
 
         this.element = document.getElementById('screen');
+        this.tableElement = document.getElementById('table');
         this.fieldElement = document.getElementById('field');
         this.blackjacksElement = document.getElementById('blackjacks');
         this.levelBlackjacksElement = document.getElementById('level-blackjacks');
@@ -29,32 +26,34 @@ var BJT = (function () {
             return parseInt(style.getPropertyValue('padding-top'));
         };
 
-        this.cardElement = function (card) {
-            var container = document.createElement('div');
-            container.className = 'card';
-            if (card.suit == '&diams;' || card.suit == '&hearts;') {
-                container.className += ' highlight';
-            }
+        this.createCardElement = function (card, type) {
+            var node = document.createElement('div');
+            node.className = 'card';
             var inner = document.createElement('div');
             inner.className = 'card-inner';
-            var top = document.createElement('div');
-            top.className = 'card-top';
-            var bottom = document.createElement('div');
-            bottom.className = 'card-bottom';
-            var rank = document.createElement('span');
-            rank.className = 'card-rank';
-            rank.innerHTML = card.rank;
-            var suit = document.createElement('span');
-            suit.className = 'card-suit';
-            suit.innerHTML = card.suit;
-            top.appendChild(rank.cloneNode(true));
-            top.appendChild(suit.cloneNode(true));
-            bottom.appendChild(rank);
-            bottom.appendChild(suit);
-            inner.appendChild(top);
-            inner.appendChild(bottom);
-            container.appendChild(inner);
-            return container;
+            if (card) {
+                node.className += ' ' + card.suit;
+                var top = document.createElement('div');
+                top.className = 'card-top';
+                var bottom = document.createElement('div');
+                bottom.className = 'card-bottom';
+                var rank = document.createElement('span');
+                rank.className = 'card-rank';
+                rank.innerHTML = card.rank;
+                var suit = document.createElement('span');
+                suit.className = 'card-suit';
+                top.appendChild(rank.cloneNode(true));
+                top.appendChild(suit.cloneNode(true));
+                bottom.appendChild(rank);
+                bottom.appendChild(suit);
+                inner.appendChild(top);
+                inner.appendChild(bottom);
+            }
+            if (type) {
+                node.className += ' ' + type;
+            }
+            node.appendChild(inner);
+            return node;
         };
 
         this.setState = function (name) {
@@ -83,17 +82,44 @@ var BJT = (function () {
             this.deckCountElement.textContent = value;
         };
 
+        this.setTableSuit = function (suit) {
+            this.tableElement.className = 'table ' + suit;
+        };
+
+        this.drawBlackjack = function () {
+            if (this.game.blackjack) {
+                var blackjack = this.game.blackjack;
+                var element = blackjack.element;
+                if (!element) {
+                    var element = this.createCardElement(null, 'blackjack');
+                }
+                this.fieldElement.appendChild(element);
+                var left = element.offsetWidth * blackjack.x;
+                var top = element.offsetHeight * blackjack.y;
+                top += this.getFieldPaddingTop();
+                element.style.left = left + 'px';
+                element.style.top = top + 'px';
+                element.style.width = (element.offsetWidth * blackjack.length) + 'px';
+                var self = this;
+                setTimeout(function () {
+                    self.game.blackjack = null;
+                    self.draw.call(self);
+                }, Math.round(this.game.speed / 2));
+            }
+        };
+
         this.draw = function () {
             while (this.fieldElement.firstChild) {
                 this.fieldElement.removeChild(this.fieldElement.firstChild);
             }
-            for (i = 0; i < this.rows; i++) {
-                for (j = 0; j < this.cols; j++) {
-                    var card = this.cards[i][j];
+            for (i = 0; i < this.game.rows; i++) {
+                for (j = 0; j < this.game.cols; j++) {
+                    var card = this.game.cards[i][j];
                     if (card) {
                         if (!card.element) {
-                            card.element= this.cardElement(card);
+                            card.element= this.createCardElement(card);
                         }
+                        card.element.className = card.element.className.replace(' empty', '');
                         this.fieldElement.appendChild(card.element);
                         var left = card.element.offsetWidth * card.x;
                         var top = card.element.offsetHeight * card.y;
@@ -103,32 +129,48 @@ var BJT = (function () {
                     }
                 }
             }
+            for (key in this.game.deck) {
+                var card = this.game.deck[key];
+                if (!card.element) {
+                    card.element= this.createCardElement(card);
+                    card.element.className += ' empty';
+                }
+                this.fieldElement.appendChild(card.element);
+
+                var height = card.element.offsetHeight;
+                var rows = Math.ceil(this.game.ranks.length * this.game.suits.length / this.game.cols);
+                var step = this.deckRowsStep;
+
+                var top = this.getFieldPaddingTop() - height - rows * step + (card.deckRow + 1) * step;
+                var left = card.element.offsetWidth * card.x;
+
+                card.element.style.top = top + 'px';
+                card.element.style.left = left + 'px';
+                card.element.style.zIndex = Math.abs(card.deckRow - rows);
+            }
+            this.drawBlackjack();
         };
     };
 
     var Game = function () {
+        this.screen = new Screen(this);
         this.ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-        this.suits = ['&clubs;', '&diams;', '&hearts;', '&spades;'];
-
+        this.suits = ['spades', 'clubs', 'diamonds', 'hearts'];
+        this.cols = 10;
+        this.rows = 4;
         this.deck = [];
         this.cards = [];
         this.currentCard = null;
-
-        this.initX = 3;
-        this.initY = 0;
-
         this.initialLevelBlackjacks = 6;
         this.levelBlackjacks = 0;
         this.blackjacks = 0;
         this.deckCount = 0;
         this.score = 0;
-        this.cols = 10;
-        this.rows = 4;
         this.speed = 1000;
-        this.screen = new Screen(this.cols, this.rows, this.cards);
         this.mainLoop = null;
         this.started = false;
         this.paused = false;
+        this.blackjack = null;
         this.nextBlackjack = null;
 
         (function () {
@@ -164,9 +206,7 @@ var BJT = (function () {
 
             this.generateDeck();
             for (i = 0; i < this.rows; i++) {
-                if (!(i in this.cards)) {
-                    this.cards[i] = {};
-                }
+                this.cards[i] = {};
                 for (j = 0; j < this.cols; j++) {
                     this.cards[i][j] = null;
                 }
@@ -282,10 +322,21 @@ var BJT = (function () {
                     cards.push(new Card(this.ranks[j], this.suits[i]));
                 }
             }
+            var i = 0;
             while (cards.length > 0) {
                 var key = Math.floor(Math.random() * cards.length);
-                this.deck.push(cards[key]);
+                var card = cards[key];
+                card.value = this.cardValue(card);
+                card.deckRow = parseInt(i / this.cols);
+                var reverse = card.deckRow % 2;
+                if (reverse) {
+                    card.x = Math.abs(i % this.cols - this.cols + 1);
+                } else {
+                    card.x = i % this.cols;
+                }
+                this.deck[i] = card;
                 cards.splice(key, 1);
+                i++;
             }
             this.deckCount += 1;
         };
@@ -312,7 +363,7 @@ var BJT = (function () {
                         var card = this.cards[i][k];
                         if (card) {
                             sequence.push(card);
-                            sequenceSum += card.getPoints();
+                            sequenceSum += card.value;
                             if (sequenceSum == 21) {
                                 return sequence;
                             }
@@ -327,14 +378,28 @@ var BJT = (function () {
             }
         };
 
+        this.cardValue = function (card) {
+            if (card.rank == 'J' || card.rank == 'Q' || card.rank == 'K') return 10;
+            if (card.rank == 'A') return 1;
+            return parseInt(card.rank);
+        };
+
         this.addCard = function (card) {
-            if (this.cards[this.initY][this.initX] == null) {
-                card.x = this.initX;
-                card.y = this.initY;
-                this.cards[this.initY][this.initX] = card;
+            if (this.cards[0][card.x] == null) {
+                card.y = 0;
+                this.cards[0][card.x] = card;
                 return true;
             }
             return false;
+        };
+
+        this.updateScreen = function () {
+            this.screen.setBlackjacks(this.blackjacks);
+            this.screen.setLevelBlackjacks(this.levelBlackjacks);
+            this.screen.setDeckCount(this.deckCount);
+            this.screen.setTableSuit(this.suits[(this.deckCount + 3) % this.suits.length]);
+            this.screen.draw();
+            console.log(this.score);
         };
 
         this.main = function () {
@@ -351,10 +416,15 @@ var BJT = (function () {
                 // Find blackjack.
                 var blackjack = this.nextBlackjack || this.findBlackjack();
                 if (blackjack) {
+                    this.blackjack = {
+                        x: blackjack[0].x,
+                        y: blackjack[0].y,
+                        length: blackjack.length
+                    };
                     this.blackjacks += 1;
                     this.score += 21;
                     this.removeCards(blackjack);
-                    // Increase level if necessary.
+                    // Increase level blackjacks if necessary.
                     if (this.blackjacks == this.levelBlackjacks) {
                         this.blackjacks = 0;
                         this.levelBlackjacks += 1;
@@ -362,6 +432,7 @@ var BJT = (function () {
                     // Check if there is another blackjack.
                     this.nextBlackjack = this.findBlackjack();
                     if (this.nextBlackjack) {
+                        this.updateScreen();
                         return;
                     }
                 }
@@ -380,11 +451,7 @@ var BJT = (function () {
                     return;
                 }
             }
-            // Update screen.
-            this.screen.setBlackjacks(this.blackjacks);
-            this.screen.setLevelBlackjacks(this.levelBlackjacks);
-            this.screen.setDeckCount(this.deckCount);
-            this.screen.draw();
+            this.updateScreen();
         };
     };
     return {

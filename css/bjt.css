@@ -14,8 +14,28 @@ body {
     width: 1344px;
     height: 800px;
     margin: 0 auto;
-    background: url('../img/back_a.png');
     box-shadow: inset 0 0 16px 0 #ffffff;
+    background: url('../img/back_a.png');
+}
+
+.table.spades {
+    background: url('../img/mark_a.png') center no-repeat, url('../img/back_a.png');
+    background-size: auto 300px, auto;
+}
+
+.table.clubs {
+    background: url('../img/mark_b.png') center no-repeat, url('../img/back_a.png');
+    background-size: auto 300px, auto;
+}
+
+.table.diamonds {
+    background: url('../img/mark_c.png') center no-repeat, url('../img/back_a.png');
+    background-size: auto 300px, auto;
+}
+
+.table.hearts {
+    background: url('../img/mark_d.png') center no-repeat, url('../img/back_a.png');
+    background-size: auto 300px, auto;
 }
 
 .field {
@@ -25,25 +45,6 @@ body {
     height: 768px;
     padding-top: 16px;
     margin: 0 auto;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: auto 300px;
-}
-
-.field.spades {
-    background-image: url('../img/mark_a.png');
-}
-
-.field.clubs {
-    background-image: url('../img/mark_b.png');
-}
-
-.field.diamonds {
-    background-image: url('../img/mark_c.png');
-}
-
-.field.hearts {
-    background-image: url('../img/mark_d.png');
 }
 
 .card {
@@ -52,6 +53,8 @@ body {
     height: 192px;
     line-height: 192px;
     text-align: center;
+    transition-property: top;
+    transition-duration: 0.2s;
 }
 
 .card-inner {
@@ -101,6 +104,29 @@ body {
     vertical-align: middle;
     font-family: 'MS Gothic', 'Arial', sans-serif;
     font-size: 24px;
+}
+
+.card.diamonds .card-rank,
+.card.hearts .card-rank,
+.card.diamonds .card-suit,
+.card.hearts .card-suit {
+    color: #ff0000;
+}
+
+.card.spades .card-suit:before {
+    content: '\2660';
+}
+
+.card.clubs .card-suit:before {
+    content: '\2663';
+}
+
+.card.diamonds .card-suit:before {
+    content: '\2666';
+}
+
+.card.hearts .card-suit:before {
+    content: '\2665';
 }
 
 .card.big {
