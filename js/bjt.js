@@ -11,6 +11,7 @@ var BJT = (function () {
 
     var Screen = function (game) {
         this.game = game;
+        this.deckRows = Math.ceil(this.game.ranks.length * this.game.suits.length / this.game.cols);
         this.deckRowsStep = 2;
 
         this.element = document.getElementById('screen');
@@ -100,6 +101,7 @@ var BJT = (function () {
                 element.style.left = left + 'px';
                 element.style.top = top + 'px';
                 element.style.width = (element.offsetWidth * blackjack.length) + 'px';
+                element.style.zIndex = this.deckRows + 1;
                 var self = this;
                 setTimeout(function () {
                     self.game.blackjack = null;
@@ -138,7 +140,7 @@ var BJT = (function () {
                 this.fieldElement.appendChild(card.element);
 
                 var height = card.element.offsetHeight;
-                var rows = Math.ceil(this.game.ranks.length * this.game.suits.length / this.game.cols);
+                var rows = this.deckRows;
                 var step = this.deckRowsStep;
 
                 var top = this.getFieldPaddingTop() - height - rows * step + (card.deckRow + 1) * step;
@@ -153,25 +155,25 @@ var BJT = (function () {
     };
 
     var Game = function () {
-        this.screen = new Screen(this);
         this.ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
         this.suits = ['spades', 'clubs', 'diamonds', 'hearts'];
         this.cols = 10;
         this.rows = 4;
-        this.deck = [];
-        this.cards = [];
-        this.currentCard = null;
         this.initialLevelBlackjacks = 6;
         this.levelBlackjacks = 0;
         this.blackjacks = 0;
         this.deckCount = 0;
         this.score = 0;
         this.speed = 1000;
+        this.deck = [];
+        this.cards = [];
+        this.currentCard = null;
         this.mainLoop = null;
         this.started = false;
         this.paused = false;
         this.blackjack = null;
         this.nextBlackjack = null;
+        this.screen = new Screen(this);
 
         (function () {
             var self = this;
@@ -181,6 +183,7 @@ var BJT = (function () {
         }).call(this);
 
         this.dispatchControls = function (event) {
+            var preventDefault = true;
             if (event.keyCode == '37') { // Left arrow
                 this.left();
             } else if (event.keyCode == '39') { // Right arrow
@@ -191,6 +194,11 @@ var BJT = (function () {
                 this.throttle(this.pause, 1000);
             } else if (event.keyCode == '13') { // Enter
                 this.start();
+            } else {
+                preventDefault = false;
+            }
+            if (preventDefault) {
+                event.preventDefault();
             }
         };
 
@@ -379,8 +387,12 @@ var BJT = (function () {
         };
 
         this.cardValue = function (card) {
-            if (card.rank == 'J' || card.rank == 'Q' || card.rank == 'K') return 10;
-            if (card.rank == 'A') return 1;
+            if (card.rank == 'J' || card.rank == 'Q' || card.rank == 'K') {
+                return 10;
+            }
+            if (card.rank == 'A') {
+                return 1;
+            }
             return parseInt(card.rank);
         };
 
@@ -399,7 +411,6 @@ var BJT = (function () {
             this.screen.setDeckCount(this.deckCount);
             this.screen.setTableSuit(this.suits[(this.deckCount + 3) % this.suits.length]);
             this.screen.draw();
-            console.log(this.score);
         };
 
         this.main = function () {
