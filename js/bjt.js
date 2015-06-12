@@ -21,6 +21,7 @@ var BJT = (function () {
         this.levelBlackjacksElement = document.getElementById('level-blackjacks');
         this.deckCountElement = document.getElementById('deck-count');
         this.deckCountSuffixElement = document.getElementById('deck-count-suffix');
+        this.scoreElement = document.getElementById('score');
 
         this.getFieldPaddingTop = function () {
             var style = window.getComputedStyle(this.fieldElement);
@@ -81,6 +82,10 @@ var BJT = (function () {
             }
             this.deckCountSuffixElement.textContent = suffix;
             this.deckCountElement.textContent = value;
+        };
+
+        this.setScore = function (value) {
+            this.scoreElement.textContent = value;
         };
 
         this.setTableSuit = function (suit) {
@@ -267,15 +272,11 @@ var BJT = (function () {
         this.down = function () {
             if (this.started && !this.paused) {
                 this.stopLoop();
-                var bonus = 0;
                 while (true) {
-                    if (this.lowerCard(this.currentCard)) {
-                        bonus++;
-                    } else {
+                    if (!this.lowerCard(this.currentCard)) {
                         break;
                     }
                 }
-                this.score += bonus;
                 this.main();
                 if (this.started) {
                     this.startLoop();
@@ -403,6 +404,7 @@ var BJT = (function () {
             this.screen.setBlackjacks(this.blackjacks);
             this.screen.setLevelBlackjacks(this.levelBlackjacks);
             this.screen.setDeckCount(this.deckCount);
+            this.screen.setScore(this.score);
             this.screen.setTableSuit(this.suits[(this.deckCount + 3) % this.suits.length]);
             this.screen.draw();
         };
