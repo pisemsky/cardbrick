@@ -102,11 +102,6 @@ var BJT = (function () {
                 element.style.top = top + 'px';
                 element.style.width = (element.offsetWidth * blackjack.length) + 'px';
                 element.style.zIndex = this.deckRows + 1;
-                var self = this;
-                setTimeout(function () {
-                    self.game.blackjack = null;
-                    self.draw.call(self);
-                }, Math.round(this.game.speed / 2));
             }
         };
 
@@ -159,7 +154,7 @@ var BJT = (function () {
         this.suits = ['spades', 'clubs', 'diamonds', 'hearts'];
         this.cols = 10;
         this.rows = 4;
-        this.initialLevelBlackjacks = 6;
+        this.levelBlackjacksIncrement = 6;
         this.levelBlackjacks = 0;
         this.blackjacks = 0;
         this.deckCount = 0;
@@ -172,7 +167,6 @@ var BJT = (function () {
         this.started = false;
         this.paused = false;
         this.blackjack = null;
-        this.nextBlackjack = null;
         this.screen = new Screen(this);
 
         (function () {
@@ -207,7 +201,7 @@ var BJT = (function () {
                 return;
             }
 
-            this.levelBlackjacks = this.initialLevelBlackjacks;
+            this.levelBlackjacks = this.levelBlackjacksIncrement;
             this.blackjacks = 0;
             this.score = 0;
             this.deckCount = 0;
@@ -417,50 +411,40 @@ var BJT = (function () {
             if (!this.started) {
                 this.started = true;
             }
-            // If there is current card, move it down.
-            if (this.currentCard) {
-                var lower = this.lowerCard(this.currentCard);
+            if (this.currentCard && this.lowerCard(this.currentCard)) {
+                this.updateScreen();
+                return;
             }
-            // If there is no card or unable to move card, calculate
-            // score.
-            if (!this.currentCard || !lower) {
-                // Find blackjack.
-                var blackjack = this.nextBlackjack || this.findBlackjack();
-                if (blackjack) {
-                    this.blackjack = {
-                        x: blackjack[0].x,
-                        y: blackjack[0].y,
-                        length: blackjack.length
-                    };
-                    this.blackjacks += 1;
-                    this.score += 21;
-                    this.removeCards(blackjack);
-                    // Increase level blackjacks if necessary.
-                    if (this.blackjacks == this.levelBlackjacks) {
-                        this.blackjacks = 0;
-                        this.levelBlackjacks += 1;
-                    }
-                    // Check if there is another blackjack.
-                    this.nextBlackjack = this.findBlackjack();
-                    if (this.nextBlackjack) {
-                        this.updateScreen();
-                        return;
-                    }
-                }
-                this.currentCard = this.deck.pop();
-                // If no more cards, generate new deck;
-                if (!this.currentCard) {
-                    this.stopLoop();
-                    this.generateDeck();
-                    this.main();
-                    this.startLoop();
-                    return;
-                }
-                // If card is not added to the field, stop game.
-                if (!this.addCard(this.currentCard)) {
+            var blackjack = this.findBlackjack();
+            if (blackjack) {
+                this.blackjack = {
+                    x: blackjack[0].x,
+                    y: blackjack[0].y,
+                    length: blackjack.length
+                };
+                this.blackjacks += 1;
+                this.score += 21;
+                this.removeCards(blackjack);
+                this.updateScreen();
+                return;
+            }
+            this.blackjack = null;
+            this.currentCard = this.deck.pop();
+            if (!this.currentCard) {
+                if (this.blackjacks < this.levelBlackjacks) {
                     this.stop();
                     return;
                 }
+                if (this.blackjacks > 0 && this.blackjacks % this.levelBlackjacksIncrement == 0) {
+                    this.levelBlackjacks += this.levelBlackjacksIncrement;
+                }
+                this.generateDeck();
+                this.main();
+                return;
+            }
+            if (!this.addCard(this.currentCard)) {
+                this.stop();
+                return;
             }
             this.updateScreen();
         };
