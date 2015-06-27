@@ -246,7 +246,7 @@ var BJT = (function () {
         };
 
         this.left = function () {
-            if (this.started && !this.paused) {
+            if (this.started && !this.paused && this.currentCard) {
                 var card = this.currentCard;
                 if (card.x > 0 && this.cards[card.y][card.x - 1] == null) {
                     this.cards[card.y][card.x - 1] = card;
@@ -258,7 +258,7 @@ var BJT = (function () {
         };
 
         this.right = function () {
-            if (this.started && !this.paused) {
+            if (this.started && !this.paused && this.currentCard) {
                 var card = this.currentCard;
                 if (card.x < (this.cols - 1) && this.cards[card.y][card.x + 1] == null) {
                     this.cards[card.y][card.x + 1] = card;
@@ -272,9 +272,11 @@ var BJT = (function () {
         this.down = function () {
             if (this.started && !this.paused) {
                 this.stopLoop();
-                while (true) {
-                    if (!this.lowerCard(this.currentCard)) {
-                        break;
+                if (this.currentCard) {
+                    while (true) {
+                        if (!this.lowerCard(this.currentCard)) {
+                            break;
+                        }
                     }
                 }
                 this.main();
@@ -427,6 +429,7 @@ var BJT = (function () {
                 this.blackjacks += 1;
                 this.score += 21;
                 this.removeCards(blackjack);
+                this.currentCard = null;
                 this.updateScreen();
                 return;
             }
