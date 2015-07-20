@@ -183,18 +183,29 @@ var BJT = (function () {
 
         this.dispatchControls = function (event) {
             var preventDefault = true;
-            if (event.keyCode == '37') { // Left arrow
-                this.left();
-            } else if (event.keyCode == '39') { // Right arrow
-                this.right();
-            } else if (event.keyCode == '32') { // Space
-                this.down();
-            } else if (event.keyCode == '80') { // P
-                this.throttle(this.pause, 1000);
-            } else if (event.keyCode == '13') { // Enter
-                this.start();
-            } else {
-                preventDefault = false;
+            switch (event.keyCode) {
+                case 37:
+                case 65:
+                    this.left();
+                    break;
+                case 39:
+                case 68:
+                    this.right();
+                    break;
+                case 40:
+                case 83:
+                case 32:
+                    this.down();
+                    break;
+                case 80:
+                case 145:
+                    this.throttle(this.pause, 1000);
+                    break;
+                case 13:
+                    this.start();
+                    break;
+                default:
+                    preventDefault = false;
             }
             if (preventDefault) {
                 event.preventDefault();
