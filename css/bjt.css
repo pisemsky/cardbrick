@@ -188,3 +188,32 @@ body {
 .highlight {
     color: #ff0000;
 }
+
+.creators {
+    display: none;
+    line-height: 64px;
+    font-family: 'Engravers', sans-serif;
+    text-align: center;
+}
+
+.person {
+    position: relative;
+    display: inline-block;
+    width: 168px;
+}
+
+.name {
+    position: relative;
+    color: #00de9a;
+    text-decoration: none;
+    font-size: 32px;
+    z-index: 10;
+}
+
+.function {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    font-size: 20px;
+    line-height: 44px;
+}
