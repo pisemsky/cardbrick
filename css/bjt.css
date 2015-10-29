@@ -11,47 +11,47 @@ body {
 }
 
 .table {
-    min-width: 1344px;
-    height: 800px;
+    min-width: 1008px;
+    height: 600px;
     margin: 0 auto;
-    box-shadow: inset 0 0 16px 0 #ffffff;
+    box-shadow: inset 0 0 12px 0 #ffffff;
     background: url('../img/back_a.png');
 }
 
 .table.spades {
     background: url('../img/mark_a.png') center no-repeat, url('../img/back_a.png');
-    background-size: auto 300px, auto;
+    background-size: auto 225px, auto;
 }
 
 .table.clubs {
     background: url('../img/mark_b.png') center no-repeat, url('../img/back_a.png');
-    background-size: auto 300px, auto;
+    background-size: auto 225px, auto;
 }
 
 .table.diamonds {
     background: url('../img/mark_c.png') center no-repeat, url('../img/back_a.png');
-    background-size: auto 300px, auto;
+    background-size: auto 225px, auto;
 }
 
 .table.hearts {
     background: url('../img/mark_d.png') center no-repeat, url('../img/back_a.png');
-    background-size: auto 300px, auto;
+    background-size: auto 225px, auto;
 }
 
 .field {
     display: none;
     position: relative;
-    width: 1280px;
-    height: 768px;
-    padding-top: 16px;
+    width: 960px;
+    height: 576px;
+    padding-top: 12px;
     margin: 0 auto;
 }
 
 .card {
     position: absolute;
-    width: 128px;
-    height: 192px;
-    line-height: 192px;
+    width: 96px;
+    height: 144px;
+    line-height: 144px;
     text-align: center;
     transition-property: top;
     transition-duration: 0.2s;
@@ -63,9 +63,9 @@ body {
     width: 100%;
     height: 100%;
     border: solid 1px #f3f3f3;
-    border-radius: 8px;
+    border-radius: 6px;
     background: url('../img/logo_b.png') center no-repeat #ffffff;
-    background-size: auto 48px;
+    background-size: auto 36px;
 }
 
 .card-top, .card-bottom {
@@ -75,35 +75,35 @@ body {
 
 .card-top {
     top: 0;
-    left: 12px;
+    left: 9px;
     text-align: left;
 }
 
 .card-bottom {
     bottom: 0;
-    right: 12px;
+    right: 9px;
     text-align: right;
 }
 
 .card-center {
     display: inline-block;
     vertical-align: middle;
-    padding: 8px;
+    padding: 6px;
     font-family: 'Engravers', sans-serif;
-    font-size: 32px;
+    font-size: 24px;
     line-height: 1;
 }
 
 .card-rank {
     vertical-align: middle;
     font-family: 'Engravers', sans-serif;
-    font-size: 32px;
+    font-size: 24px;
 }
 
 .card-suit {
     vertical-align: middle;
     font-family: 'MS Gothic', 'Arial', sans-serif;
-    font-size: 24px;
+    font-size: 18px;
 }
 
 .card.diamonds .card-rank,
@@ -131,32 +131,32 @@ body {
 
 .card.big {
     position: static;
-    width: 512px;
-    height: 768px;
-    line-height: 768px;
+    width: 384px;
+    height: 576px;
+    line-height: 576px;
     margin: 0 auto;
 }
 
 .card.big .card-inner {
-    border-radius: 32px;
+    border-radius: 24px;
     background: url('../img/logo_a.png') center no-repeat #ffffff;
-    background-size: auto 192px;
+    background-size: auto 144px;
 }
 
 .card.big .card-top {
-    left: 24px;
+    left: 18px;
 }
 
 .card.big .card-bottom {
-    right: 24px;
+    right: 18px;
 }
 
 .card.big .card-rank {
-    font-size: 128px;
+    font-size: 96px;
 }
 
 .card.big .card-suit {
-    font-size: 96px;
+    font-size: 72px;
 }
 
 .card.empty .card-inner {
@@ -164,13 +164,9 @@ body {
     border-color: #f2f200;
 }
 
-.card.empty .card-top, .card.empty .card-bottom {
-    display: none;
-}
-
 .card.blackjack .card-inner {
     background: url('../img/logo_a.png') center no-repeat #ffffff;
-    background-size: auto 88px;
+    background-size: auto 66px;
 }
 
 .card.blackjack .card-top, .card.blackjack .card-bottom {
@@ -179,9 +175,9 @@ body {
 
 .status {
     display: none;
-    line-height: 64px;
+    line-height: 48px;
     font-family: 'Engravers', sans-serif;
-    font-size: 32px;
+    font-size: 24px;
     text-align: center;
 }
 
@@ -191,7 +187,7 @@ body {
 
 .creators {
     display: none;
-    line-height: 64px;
+    line-height: 48px;
     font-family: 'Engravers', sans-serif;
     text-align: center;
 }
@@ -199,14 +195,14 @@ body {
 .person {
     position: relative;
     display: inline-block;
-    width: 168px;
+    width: 126px;
 }
 
 .name {
     position: relative;
     color: #00de9a;
     text-decoration: none;
-    font-size: 32px;
+    font-size: 24px;
     z-index: 10;
 }
 
@@ -214,6 +210,27 @@ body {
     position: absolute;
     width: 100%;
     bottom: 0;
-    font-size: 20px;
-    line-height: 44px;
+    font-size: 15px;
+    line-height: 24px;
+}
+
+.social {
+    display: inline-block;
+    width: 64px;
+    margin: 18px 0;
+    border-radius: 12px;
+    line-height: 64px;
+    font-family: 'Engravers', sans-serif;
+    font-size: 48px;
+    text-decoration: none;
+    text-align: center;
+    color: #ffffff;
+}
+
+.social.fb {
+    background-color: #3a5795;
+}
+
+.social.vk {
+    background-color: #6281a3;
 }
