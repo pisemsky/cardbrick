@@ -6,7 +6,6 @@ var BJT = (function () {
         this.y = null;
         this.value = null;
         this.deckRow = null;
-        this.element = null;
     };
 
     var Screen = function (game) {
@@ -14,60 +13,26 @@ var BJT = (function () {
         this.deckRows = Math.ceil(this.game.ranks.length * this.game.suits.length / this.game.cols);
         this.deckRowsStep = 2;
 
-        this.element = document.getElementById('screen');
-        this.tableElement = document.getElementById('table');
-        this.fieldElement = document.getElementById('field');
-        this.blackjacksElement = document.getElementById('blackjacks');
-        this.levelBlackjacksElement = document.getElementById('level-blackjacks');
-        this.deckCountElement = document.getElementById('deck-count');
-        this.deckCountSuffixElement = document.getElementById('deck-count-suffix');
-        this.scoreElement = document.getElementById('score');
+        this.state = 'initial';
+        this.table = 'spades';
+        this.blackjacks = '';
+        this.levelBlackjacks = '';
+        this.deckCount = '';
+        this.deckCountSuffix = '';
+        this.score = '';
 
-        this.getFieldPaddingTop = function () {
-            var style = window.getComputedStyle(this.fieldElement);
-            return parseInt(style.getPropertyValue('padding-top'));
-        };
-
-        this.createCardElement = function (card, type) {
-            var node = document.createElement('div');
-            node.className = 'card';
-            var inner = document.createElement('div');
-            inner.className = 'card-inner';
-            if (card) {
-                node.className += ' ' + card.suit;
-                var top = document.createElement('div');
-                top.className = 'card-top';
-                var bottom = document.createElement('div');
-                bottom.className = 'card-bottom';
-                var rank = document.createElement('span');
-                rank.className = 'card-rank';
-                rank.innerHTML = card.rank;
-                var suit = document.createElement('span');
-                suit.className = 'card-suit';
-                top.appendChild(rank.cloneNode(true));
-                top.appendChild(suit.cloneNode(true));
-                bottom.appendChild(rank);
-                bottom.appendChild(suit);
-                inner.appendChild(top);
-                inner.appendChild(bottom);
-            }
-            if (type) {
-                node.className += ' ' + type;
-            }
-            node.appendChild(inner);
-            return node;
-        };
+        this.cards = {};
 
         this.setState = function (name) {
-            this.element.className = 'screen ' + name;
+            this.state = name;
         };
 
         this.setBlackjacks = function (value) {
-            this.blackjacksElement.textContent = value;
+            this.blackjacks = value;
         };
 
         this.setLevelBlackjacks = function (value) {
-            this.levelBlackjacksElement.textContent = value;
+            this.levelBlackjacks = value;
         };
 
         this.setDeckCount = function (value) {
@@ -80,77 +45,25 @@ var BJT = (function () {
             } else {
                 var suffix = 'th';
             }
-            this.deckCountSuffixElement.textContent = suffix;
-            this.deckCountElement.textContent = value;
+            this.deckCountSuffix = suffix;
+            this.deckCount = value;
         };
 
         this.setScore = function (value) {
-            this.scoreElement.textContent = value;
+            this.score = value;
         };
 
         this.setTableSuit = function (suit) {
-            this.tableElement.className = 'table ' + suit;
-        };
-
-        this.drawBlackjack = function () {
-            if (this.game.blackjack) {
-                var blackjack = this.game.blackjack;
-                var element = blackjack.element;
-                if (!element) {
-                    var element = this.createCardElement(null, 'blackjack');
-                }
-                this.fieldElement.appendChild(element);
-                var left = element.offsetWidth * blackjack.x;
-                var top = element.offsetHeight * blackjack.y;
-                top += this.getFieldPaddingTop();
-                element.style.left = left + 'px';
-                element.style.top = top + 'px';
-                element.style.width = (element.offsetWidth * blackjack.length) + 'px';
-                element.style.zIndex = this.deckRows + 1;
-            }
+            this.table = suit;
         };
 
         this.draw = function () {
-            while (this.fieldElement.firstChild) {
-                this.fieldElement.removeChild(this.fieldElement.firstChild);
-            }
             for (i = 0; i < this.game.rows; i++) {
                 for (j = 0; j < this.game.cols; j++) {
                     var card = this.game.cards[i][j];
-                    if (card) {
-                        if (!card.element) {
-                            card.element= this.createCardElement(card);
-                        }
-                        card.element.className = card.element.className.replace(' empty', '');
-                        this.fieldElement.appendChild(card.element);
-                        var left = card.element.offsetWidth * card.x;
-                        var top = card.element.offsetHeight * card.y;
-                        top += this.getFieldPaddingTop();
-                        card.element.style.left = left + 'px';
-                        card.element.style.top = top + 'px';
-                    }
+                    Vue.set(this.cards, i + '-' + j, card);
                 }
             }
-            for (key in this.game.deck) {
-                var card = this.game.deck[key];
-                if (!card.element) {
-                    card.element= this.createCardElement(card);
-                    card.element.className += ' empty';
-                }
-                this.fieldElement.appendChild(card.element);
-
-                var height = card.element.offsetHeight;
-                var rows = this.deckRows;
-                var step = this.deckRowsStep;
-
-                var top = this.getFieldPaddingTop() - height - rows * step + (card.deckRow + 1) * step;
-                var left = card.element.offsetWidth * card.x;
-
-                card.element.style.top = top + 'px';
-                card.element.style.left = left + 'px';
-                card.element.style.zIndex = Math.abs(card.deckRow - rows);
-            }
-            this.drawBlackjack();
         };
     };
 
@@ -467,7 +380,14 @@ var BJT = (function () {
     };
     return {
         init: function () {
-            new Game();
+            return new Game();
         }
     };
 }());
+
+var app = new Vue({
+    el: '#app',
+    data: {
+        game: BJT.init()
+    }
+});

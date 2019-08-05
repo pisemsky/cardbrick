@@ -7,9 +7,42 @@
         <link href="css/bjt.css" rel="stylesheet">
     </head>
     <body>
-        <div id="screen" class="screen initial">
-            <div id="table" class="table spades">
-                <div id="field" class="field started"></div>
+        <div id="app"><div class="screen" :class="game.screen.state">
+            <div class="table" :class="game.screen.table">
+                <div id="field" class="field started">
+                    <div class="card empty"
+                         v-for="card in game.deck"
+                         :class="card.suit"
+                         :style="{left: (96 * card.x) + 'px', top: (12 - 144 - game.screen.deckRows * game.screen.deckRowsStep + (card.deckRow + 1) * game.screen.deckRowsStep) + 'px', zIndex: Math.abs(card.deckRow - game.screen.deckRows)}">
+                        <div class="card-inner">
+                            <div class="card-top">
+                                <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card"
+                         v-for="card in game.screen.cards"
+                         v-if="card"
+                         :class="card.suit"
+                         :style="{left: (96 * card.x) + 'px', top: (144 * card.y + 12) + 'px'}">
+                        <div class="card-inner">
+                            <div class="card-top">
+                                <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card blackjack"
+                         v-if="game.blackjack"
+                         :style="{left: (96 * game.blackjack.x) + 'px', top: (144 * game.blackjack.y + 12) + 'px', width: (96 * game.blackjack.length) + 'px', zIndex: game.screen.deckRows + 1}">
+                        <div class="card-inner"></div>
+                    </div>
+                </div>
                 <div class="field initial">
                     <div class="card spades big">
                         <div class="card-inner">
@@ -47,16 +80,16 @@
                 press <span class="highlight">enter</span> to play
             </div>
             <div class="status started paused stopped">
-                <span id="deck-count"></span><span id="deck-count-suffix"></span>
+                <span>{{ game.screen.deckCount }}</span><span>{{ game.screen.deckCountSuffix }}</span>
                 deck
                 &nbsp;
                 blackjacks
                 <span class="highlight">
-                    <span id="blackjacks"></span>/<span id="level-blackjacks"></span>
+                    <span>{{ game.screen.blackjacks }}</span>/<span>{{ game.screen.levelBlackjacks }}</span>
                 </span>
                 &nbsp;
                 score
-                <span id="score" class="highlight"></span>
+                <span class="highlight">{{ game.screen.score }}</span>
             </div>
             <div class="creators">
                 <div class="person">
@@ -67,10 +100,8 @@
                     <div class="function">developer</div>
                 </div>
             </div>
-        </div>
+        </div></div>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="js/bjt.js"></script>
-        <script>
-        BJT.init();
-        </script>
     </body>
 </html>
