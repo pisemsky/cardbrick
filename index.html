@@ -7,100 +7,123 @@
         <link href="css/bjt.css" rel="stylesheet">
     </head>
     <body>
-        <div id="app"><div class="screen" :class="game.screen.state">
-            <div class="table" :class="game.screen.table">
-                <div id="field" class="field started">
-                    <div class="card empty"
-                         v-for="card in game.deck"
-                         :class="card.suit"
-                         :style="{left: (96 * card.x) + 'px', top: (12 - 144 - game.screen.deckRows * game.screen.deckRowsStep + (card.deckRow + 1) * game.screen.deckRowsStep) + 'px', zIndex: Math.abs(card.deckRow - game.screen.deckRows)}">
-                        <div class="card-inner">
-                            <div class="card-top">
-                                <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
-                            </div>
-                            <div class="card-bottom">
-                                <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card"
-                         v-for="card in game.screen.cards"
-                         v-if="card"
-                         :class="card.suit"
-                         :style="{left: (96 * card.x) + 'px', top: (144 * card.y + 12) + 'px'}">
-                        <div class="card-inner">
-                            <div class="card-top">
-                                <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
-                            </div>
-                            <div class="card-bottom">
-                                <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card blackjack"
-                         v-if="game.blackjack"
-                         :style="{left: (96 * game.blackjack.x) + 'px', top: (144 * game.blackjack.y + 12) + 'px', width: (96 * game.blackjack.length) + 'px', zIndex: game.screen.deckRows + 1}">
-                        <div class="card-inner"></div>
+        <div id="app">
+            <game-app></game-app>
+        </div>
+        <script type="text/x-template" id="game-app">
+            <div class="screen" :class="game.screen.state">
+                <div class="table" :class="game.screen.table">
+                    <game-initial-screen></game-initial-screen>
+                    <game-started-screen :game="game"></game-started-screen>
+                    <game-paused-screen></game-paused-screen>
+                    <game-stopped-screen></game-stopped-screen>
+                </div>
+                <div class="status initial">
+                    press <span class="highlight">enter</span> to play
+                </div>
+                <div class="status started paused stopped">
+                    <span>{{ game.screen.deckCount }}</span><span>{{ game.screen.deckCountSuffix }}</span>
+                    deck
+                    &nbsp;
+                    blackjacks
+                    <span class="highlight">
+                        <span>{{ game.screen.blackjacks }}</span>/<span>{{ game.screen.levelBlackjacks }}</span>
+                    </span>
+                    &nbsp;
+                    score
+                    <span class="highlight">{{ game.screen.score }}</span>
+                </div>
+                <div class="creators">
+                    <div class="person">
+                        <a class="name" href="http://datadweller.com">denny</a>
+                        <div class="function">designer</div>
+                    </div><div class="person">
+                        <a class="name" href="https://pisemsky.com">evgeny</a>
+                        <div class="function">developer</div>
                     </div>
                 </div>
-                <div class="field initial">
-                    <div class="card spades big">
-                        <div class="card-inner">
-                            <div class="card-top">
-                                <span class="card-rank">J</span><span class="card-suit"></span>
-                            </div>
-                            <div class="card-bottom">
-                                <span class="card-rank">J</span><span class="card-suit"></span>
-                            </div>
+            </div>
+        </script>
+        <script type="text/x-template" id="game-initial-screen">
+            <div class="field initial">
+                <div class="card spades big">
+                    <div class="card-inner">
+                        <div class="card-top">
+                            <span class="card-rank">J</span><span class="card-suit"></span>
                         </div>
-                    </div>
-                </div>
-                <div class="field paused">
-                    <div class="card big empty">
-                        <div class="card-inner">
-                            <div class="card-center">pause</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="field stopped">
-                    <div class="card big empty">
-                        <div class="card-inner">
-                            <div class="card-top">
-                                <a class="social fb" href="https://www.facebook.com/sharer/sharer.php?u=https://pisemsky.com/blackjacktetris" target="_blank" rel="nofollow">F</a>
-                            </div>
-                            <div class="card-center">game over</div>
-                            <div class="card-bottom">
-                                <a class="social vk" href="https://vk.com/share.php?url=https://pisemsky.com/blackjacktetris" target="_blank" rel="nofollow">V</a>
-                            </div>
+                        <div class="card-bottom">
+                            <span class="card-rank">J</span><span class="card-suit"></span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="status initial">
-                press <span class="highlight">enter</span> to play
+        </script>
+        <script type="text/x-template" id="game-started-screen">
+            <div class="field started">
+                <game-deck-card :card="card"
+                                :deck-rows="game.screen.deckRows"
+                                :deck-rows-step="game.screen.deckRowsStep"
+                                v-for="card in game.deck"></game-deck-card>
+                <game-card :card="card"
+                           v-for="card in game.screen.cards"
+                           v-if="card"></game-card>
+                <game-blackjack :blackjack="game.blackjack"
+                                :deck-rows="game.screen.deckRows"
+                                v-if="game.blackjack"></game-blackjack>
             </div>
-            <div class="status started paused stopped">
-                <span>{{ game.screen.deckCount }}</span><span>{{ game.screen.deckCountSuffix }}</span>
-                deck
-                &nbsp;
-                blackjacks
-                <span class="highlight">
-                    <span>{{ game.screen.blackjacks }}</span>/<span>{{ game.screen.levelBlackjacks }}</span>
-                </span>
-                &nbsp;
-                score
-                <span class="highlight">{{ game.screen.score }}</span>
-            </div>
-            <div class="creators">
-                <div class="person">
-                    <a class="name" href="http://datadweller.com">denny</a>
-                    <div class="function">designer</div>
-                </div><div class="person">
-                    <a class="name" href="https://pisemsky.com">evgeny</a>
-                    <div class="function">developer</div>
+        </script>
+        <script type="text/x-template" id="game-paused-screen">
+            <div class="field paused">
+                <div class="card big empty">
+                    <div class="card-inner">
+                        <div class="card-center">pause</div>
+                    </div>
                 </div>
             </div>
-        </div></div>
+        </script>
+        <script type="text/x-template" id="game-stopped-screen">
+            <div class="field stopped">
+                <div class="card big empty">
+                    <div class="card-inner">
+                        <div class="card-top">
+                            <a class="social fb" href="https://www.facebook.com/sharer/sharer.php?u=https://pisemsky.com/blackjacktetris" target="_blank" rel="nofollow">F</a>
+                        </div>
+                        <div class="card-center">game over</div>
+                        <div class="card-bottom">
+                            <a class="social vk" href="https://vk.com/share.php?url=https://pisemsky.com/blackjacktetris" target="_blank" rel="nofollow">V</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <script type="text/x-template" id="game-card">
+            <div class="card"
+                 :class="card.suit"
+                 :style="{left: (96 * card.x) + 'px', top: (144 * card.y + 12) + 'px'}">
+                <div class="card-inner">
+                    <div class="card-top">
+                        <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
+                    </div>
+                    <div class="card-bottom">
+                        <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <script type="text/x-template" id="game-blackjack">
+            <div class="card blackjack"
+                 :style="{left: (96 * blackjack.x) + 'px', top: (144 * blackjack.y + 12) + 'px', width: (96 * blackjack.length) + 'px', zIndex: deckRows + 1}">
+                <div class="card-inner"></div>
+            </div>
+        </script>
+        <script type="text/x-template" id="game-deck-card">
+            <div class="card empty"
+                 :class="card.suit"
+                 :style="{left: (96 * card.x) + 'px', top: (12 - 144 - deckRows * deckRowsStep + (card.deckRow + 1) * deckRowsStep) + 'px', zIndex: Math.abs(card.deckRow - deckRows)}">
+                <div class="card-inner">
+                </div>
+            </div>
+        </script>
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="js/bjt.js"></script>
     </body>

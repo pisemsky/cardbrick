@@ -385,9 +385,47 @@ var BJT = (function () {
     };
 }());
 
+Vue.component('game-app', {
+    data: function () {
+        return {
+            game: BJT.init()
+        }
+    },
+    template: '#game-app'
+});
+
+Vue.component('game-initial-screen', {
+    template: '#game-initial-screen'
+});
+
+Vue.component('game-started-screen', {
+    props: ['game'],
+    template: '#game-started-screen'
+});
+
+Vue.component('game-paused-screen', {
+    template: '#game-paused-screen'
+});
+
+Vue.component('game-stopped-screen', {
+    template: '#game-stopped-screen'
+});
+
+Vue.component('game-deck-card', {
+    props: ['card', 'deckRows', 'deckRowsStep'],
+    template: '#game-deck-card'
+});
+
+Vue.component('game-card', {
+    props: ['card'],
+    template: '#game-card'
+});
+
+Vue.component('game-blackjack', {
+    props: ['blackjack', 'deckRows'],
+    template: '#game-blackjack'
+});
+
 var app = new Vue({
-    el: '#app',
-    data: {
-        game: BJT.init()
-    }
+    el: '#app'
 });
