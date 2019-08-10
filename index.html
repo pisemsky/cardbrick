@@ -11,8 +11,8 @@
             <game-app></game-app>
         </div>
         <script type="text/x-template" id="game-app">
-            <div class="screen" :class="game.screen.state">
-                <div class="table" :class="game.screen.table">
+            <div class="screen" :class="game.state">
+                <div class="table" :class="game.table">
                     <game-initial-screen></game-initial-screen>
                     <game-started-screen :game="game"></game-started-screen>
                     <game-paused-screen></game-paused-screen>
@@ -22,16 +22,16 @@
                     press <span class="highlight">enter</span> to play
                 </div>
                 <div class="status started paused stopped">
-                    <span>{{ game.screen.deckCount }}</span><span>{{ game.screen.deckCountSuffix }}</span>
+                    <span>{{ game.deckCount }}</span><span>{{ game.deckCount | suffix }}</span>
                     deck
                     &nbsp;
                     blackjacks
                     <span class="highlight">
-                        <span>{{ game.screen.blackjacks }}</span>/<span>{{ game.screen.levelBlackjacks }}</span>
+                        <span>{{ game.blackjacks }}</span>/<span>{{ game.levelBlackjacks }}</span>
                     </span>
                     &nbsp;
                     score
-                    <span class="highlight">{{ game.screen.score }}</span>
+                    <span class="highlight">{{ game.score }}</span>
                 </div>
                 <div class="creators">
                     <div class="person">
@@ -61,14 +61,14 @@
         <script type="text/x-template" id="game-started-screen">
             <div class="field started">
                 <game-deck-card :card="card"
-                                :deck-rows="game.screen.deckRows"
-                                :deck-rows-step="game.screen.deckRowsStep"
+                                :deck-rows="game.deckRows"
+                                :deck-rows-step="game.deckRowsStep"
                                 v-for="card in game.deck"></game-deck-card>
                 <game-card :card="card"
-                           v-for="card in game.screen.cards"
+                           v-for="card in game.screenCards"
                            v-if="card"></game-card>
                 <game-blackjack :blackjack="game.blackjack"
-                                :deck-rows="game.screen.deckRows"
+                                :deck-rows="game.deckRows"
                                 v-if="game.blackjack"></game-blackjack>
             </div>
         </script>

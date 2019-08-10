@@ -8,65 +8,6 @@ var BJT = (function () {
         this.deckRow = null;
     };
 
-    var Screen = function (game) {
-        this.game = game;
-        this.deckRows = Math.ceil(this.game.ranks.length * this.game.suits.length / this.game.cols);
-        this.deckRowsStep = 2;
-
-        this.state = 'initial';
-        this.table = 'spades';
-        this.blackjacks = '';
-        this.levelBlackjacks = '';
-        this.deckCount = '';
-        this.deckCountSuffix = '';
-        this.score = '';
-
-        this.cards = {};
-
-        this.setState = function (name) {
-            this.state = name;
-        };
-
-        this.setBlackjacks = function (value) {
-            this.blackjacks = value;
-        };
-
-        this.setLevelBlackjacks = function (value) {
-            this.levelBlackjacks = value;
-        };
-
-        this.setDeckCount = function (value) {
-            if (value == 1) {
-                var suffix = 'st';
-            } else if (value == 2) {
-                var suffix = 'nd';
-            } else if (value == 3) {
-                var suffix = 'rd';
-            } else {
-                var suffix = 'th';
-            }
-            this.deckCountSuffix = suffix;
-            this.deckCount = value;
-        };
-
-        this.setScore = function (value) {
-            this.score = value;
-        };
-
-        this.setTableSuit = function (suit) {
-            this.table = suit;
-        };
-
-        this.draw = function () {
-            for (i = 0; i < this.game.rows; i++) {
-                for (j = 0; j < this.game.cols; j++) {
-                    var card = this.game.cards[i][j];
-                    Vue.set(this.cards, i + '-' + j, card);
-                }
-            }
-        };
-    };
-
     var Game = function () {
         this.ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
         this.suits = ['spades', 'clubs', 'diamonds', 'hearts'];
@@ -85,7 +26,21 @@ var BJT = (function () {
         this.started = false;
         this.paused = false;
         this.blackjack = null;
-        this.screen = new Screen(this);
+        this.screenCards = {};
+        this.screenTable = 'spades';
+        this.state = 'initial';
+        this.deckRows = Math.ceil(this.ranks.length * this.suits.length / this.cols);
+        this.deckRowsStep = 2;
+
+        this.draw = function () {
+            for (i = 0; i < this.rows; i++) {
+                for (j = 0; j < this.cols; j++) {
+                    var card = this.cards[i][j];
+                    Vue.set(this.screenCards, i + '-' + j, card);
+                }
+            }
+            this.screenTable = this.suits[(this.deckCount + 3) % this.suits.length];
+        };
 
         (function () {
             var self = this;
@@ -144,7 +99,7 @@ var BJT = (function () {
             }
             this.currentCard = null;
 
-            this.screen.setState('started');
+            this.state = 'started';
             this.main();
             this.startLoop();
         };
@@ -152,7 +107,7 @@ var BJT = (function () {
         this.stop = function () {
             this.stopLoop();
             this.started = false;
-            this.screen.setState('stopped');
+            this.state = 'stopped';
         };
 
         this.pause = function () {
@@ -160,11 +115,11 @@ var BJT = (function () {
                 if (this.paused) {
                     this.paused = false;
                     this.startLoop();
-                    this.screen.setState('started');
+                    this.state = 'started';
                 } else {
                     this.stopLoop();
                     this.paused = true;
-                    this.screen.setState('paused');
+                    this.state = 'paused';
                 }
             }
         };
@@ -177,7 +132,7 @@ var BJT = (function () {
                     this.cards[card.y][card.x] = null;
                     card.x -= 1;
                 }
-                this.screen.draw();
+                this.draw();
             }
         };
 
@@ -189,7 +144,7 @@ var BJT = (function () {
                     this.cards[card.y][card.x] = null;
                     card.x += 1;
                 }
-                this.screen.draw();
+                this.draw();
             }
         };
 
@@ -326,21 +281,12 @@ var BJT = (function () {
             return false;
         };
 
-        this.updateScreen = function () {
-            this.screen.setBlackjacks(this.blackjacks);
-            this.screen.setLevelBlackjacks(this.levelBlackjacks);
-            this.screen.setDeckCount(this.deckCount);
-            this.screen.setScore(this.score);
-            this.screen.setTableSuit(this.suits[(this.deckCount + 3) % this.suits.length]);
-            this.screen.draw();
-        };
-
         this.main = function () {
             if (!this.started) {
                 this.started = true;
             }
             if (this.currentCard && this.lowerCard(this.currentCard)) {
-                this.updateScreen();
+                this.draw();
                 return;
             }
             var blackjack = this.findBlackjack();
@@ -354,7 +300,7 @@ var BJT = (function () {
                 this.score += 21;
                 this.removeCards(blackjack);
                 this.currentCard = null;
-                this.updateScreen();
+                this.draw();
                 return;
             }
             this.blackjack = null;
@@ -375,7 +321,7 @@ var BJT = (function () {
                 this.stop();
                 return;
             }
-            this.updateScreen();
+            this.draw();
         };
     };
     return {
@@ -424,6 +370,19 @@ Vue.component('game-card', {
 Vue.component('game-blackjack', {
     props: ['blackjack', 'deckRows'],
     template: '#game-blackjack'
+});
+
+Vue.filter('suffix', function (value) {
+    if (value == 1) {
+        var suffix = 'st';
+    } else if (value == 2) {
+        var suffix = 'nd';
+    } else if (value == 3) {
+        var suffix = 'rd';
+    } else {
+        var suffix = 'th';
+    }
+    return suffix;
 });
 
 var app = new Vue({
