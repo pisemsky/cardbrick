@@ -1,13 +1,4 @@
 var BJT = (function () {
-    var Card = function (rank, suit) {
-        this.rank = rank;
-        this.suit = suit;
-        this.x = null;
-        this.y = null;
-        this.value = null;
-        this.deckRow = null;
-    };
-
     var Game = function () {
         this.ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
         this.suits = ['spades', 'clubs', 'diamonds', 'hearts'];
@@ -203,7 +194,7 @@ var BJT = (function () {
             var cards = [];
             for (i = 0; i < this.suits.length; i++) {
                 for (j = 0; j < this.ranks.length; j++) {
-                    cards.push(new Card(this.ranks[j], this.suits[i]));
+                    cards.push({rank: this.ranks[j], suit: this.suits[i]});
                 }
             }
             var i = 0;
