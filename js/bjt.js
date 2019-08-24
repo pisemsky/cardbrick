@@ -1,29 +1,39 @@
-var BJT = (function () {
-    var Game = function () {
-        this.ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-        this.suits = ['spades', 'clubs', 'diamonds', 'hearts'];
-        this.cols = 10;
-        this.rows = 4;
-        this.levelBlackjacksIncrement = 6;
-        this.levelBlackjacks = 0;
-        this.blackjacks = 0;
-        this.deckCount = 0;
-        this.score = 0;
-        this.speed = 1000;
-        this.deck = [];
-        this.cards = [];
-        this.currentCard = null;
-        this.mainLoop = null;
-        this.started = false;
-        this.paused = false;
-        this.blackjack = null;
-        this.screenCards = {};
-        this.screenTable = 'spades';
-        this.state = 'initial';
-        this.deckRows = Math.ceil(this.ranks.length * this.suits.length / this.cols);
-        this.deckRowsStep = 2;
-
-        this.draw = function () {
+Vue.component('game-app', {
+    data: function () {
+        return {
+            ranks: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'],
+            suits: ['spades', 'clubs', 'diamonds', 'hearts'],
+            cols: 10,
+            rows: 4,
+            levelBlackjacksIncrement: 6,
+            levelBlackjacks: 0,
+            blackjacks: 0,
+            deckCount: 0,
+            score: 0,
+            speed: 1000,
+            deck: [],
+            cards: [],
+            currentCard: null,
+            mainLoop: null,
+            started: false,
+            paused: false,
+            blackjack: null,
+            screenCards: {},
+            screenTable: 'spades',
+            state: 'initial',
+            deckRowsStep: 2
+        };
+    },
+    computed: {
+        deckRows: function () {
+            return Math.ceil(this.ranks.length * this.suits.length / this.cols);
+        },
+        game: function () {
+            return this;
+        }
+    },
+    methods: {
+        draw: function () {
             for (i = 0; i < this.rows; i++) {
                 for (j = 0; j < this.cols; j++) {
                     var card = this.cards[i][j];
@@ -31,16 +41,8 @@ var BJT = (function () {
                 }
             }
             this.screenTable = this.suits[(this.deckCount + 3) % this.suits.length];
-        };
-
-        (function () {
-            var self = this;
-            window.onkeydown = function (event) {
-                self.dispatchControls.call(self, event);
-            };
-        }).call(this);
-
-        this.dispatchControls = function (event) {
+        },
+        dispatchControls: function (event) {
             var preventDefault = true;
             switch (event.keyCode) {
                 case 37:
@@ -69,9 +71,8 @@ var BJT = (function () {
             if (preventDefault) {
                 event.preventDefault();
             }
-        };
-
-        this.start = function () {
+        },
+        start: function () {
             if (this.started) {
                 return;
             }
@@ -93,15 +94,13 @@ var BJT = (function () {
             this.state = 'started';
             this.main();
             this.startLoop();
-        };
-
-        this.stop = function () {
+        },
+        stop: function () {
             this.stopLoop();
             this.started = false;
             this.state = 'stopped';
-        };
-
-        this.pause = function () {
+        },
+        pause: function () {
             if (this.started) {
                 if (this.paused) {
                     this.paused = false;
@@ -113,9 +112,8 @@ var BJT = (function () {
                     this.state = 'paused';
                 }
             }
-        };
-
-        this.left = function () {
+        },
+        left: function () {
             if (this.started && !this.paused && this.currentCard) {
                 var card = this.currentCard;
                 if (card.x > 0 && this.cards[card.y][card.x - 1] == null) {
@@ -125,9 +123,8 @@ var BJT = (function () {
                 }
                 this.draw();
             }
-        };
-
-        this.right = function () {
+        },
+        right: function () {
             if (this.started && !this.paused && this.currentCard) {
                 var card = this.currentCard;
                 if (card.x < (this.cols - 1) && this.cards[card.y][card.x + 1] == null) {
@@ -137,9 +134,8 @@ var BJT = (function () {
                 }
                 this.draw();
             }
-        };
-
-        this.down = function () {
+        },
+        down: function () {
             if (this.started && !this.paused) {
                 this.stopLoop();
                 if (this.currentCard) {
@@ -154,9 +150,8 @@ var BJT = (function () {
                     this.startLoop();
                 }
             }
-        };
-
-        this.throttle = function (callable, time) {
+        },
+        throttle: function (callable, time) {
             var self = this;
             if (typeof(callable.throttle) == 'undefined') {
                 callable.call(self);
@@ -164,23 +159,20 @@ var BJT = (function () {
                     delete(callable.throttle);
                 }, time);
             }
-        };
-
-        this.startLoop = function (speed) {
+        },
+        startLoop: function (speed) {
             this.stopLoop();
             var self = this;
             this.mainLoop = setInterval(function () {
                 self.main.call(self);
             }, this.speed);
-        };
-
-        this.stopLoop = function () {
+        },
+        stopLoop: function () {
             if (this.mainLoop) {
                 clearInterval(this.mainLoop);
             }
-        };
-
-        this.lowerCard = function (card) {
+        },
+        lowerCard: function (card) {
             if (card.y < (this.rows - 1) && this.cards[card.y + 1][card.x] == null) {
                 this.cards[card.y + 1][card.x] = card;
                 this.cards[card.y][card.x] = null;
@@ -188,9 +180,8 @@ var BJT = (function () {
                 return true;
             }
             return false;
-        };
-
-        this.generateDeck = function () {
+        },
+        generateDeck: function () {
             var cards = [];
             for (i = 0; i < this.suits.length; i++) {
                 for (j = 0; j < this.ranks.length; j++) {
@@ -214,9 +205,8 @@ var BJT = (function () {
                 i++;
             }
             this.deckCount += 1;
-        };
-
-        this.removeCards = function (cards) {
+        },
+        removeCards: function (cards) {
             for (key in cards) {
                 var card = cards[key];
                 this.cards[card.y][card.x] = null;
@@ -227,9 +217,8 @@ var BJT = (function () {
                     }
                 }
             }
-        };
-
-        this.findBlackjack = function () {
+        },
+        findBlackjack: function () {
             for (i = this.rows - 1; i >= 0; i--) {
                 for (j = 0; j < this.cols; j++) {
                     var sequence = [];
@@ -251,9 +240,8 @@ var BJT = (function () {
                     }
                 }
             }
-        };
-
-        this.cardValue = function (card) {
+        },
+        cardValue: function (card) {
             if (card.rank == 'J' || card.rank == 'Q' || card.rank == 'K') {
                 return 10;
             }
@@ -261,18 +249,16 @@ var BJT = (function () {
                 return 1;
             }
             return parseInt(card.rank);
-        };
-
-        this.addCard = function (card) {
+        },
+        addCard: function (card) {
             if (this.cards[0][card.x] == null) {
                 card.y = 0;
                 this.cards[0][card.x] = card;
                 return true;
             }
             return false;
-        };
-
-        this.main = function () {
+        },
+        main: function () {
             if (!this.started) {
                 this.started = true;
             }
@@ -313,20 +299,10 @@ var BJT = (function () {
                 return;
             }
             this.draw();
-        };
-    };
-    return {
-        init: function () {
-            return new Game();
         }
-    };
-}());
-
-Vue.component('game-app', {
-    data: function () {
-        return {
-            game: BJT.init()
-        }
+    },
+    mounted: function () {
+        window.onkeydown = this.dispatchControls;
     },
     template: '#game-app'
 });

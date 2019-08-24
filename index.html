@@ -11,8 +11,8 @@
             <game-app></game-app>
         </div>
         <script type="text/x-template" id="game-app">
-            <div class="screen" :class="game.state">
-                <div class="table" :class="game.table">
+            <div class="screen" :class="state">
+                <div class="table" :class="screenTable">
                     <game-initial-screen></game-initial-screen>
                     <game-started-screen :game="game"></game-started-screen>
                     <game-paused-screen></game-paused-screen>
@@ -22,16 +22,16 @@
                     press <span class="highlight">enter</span> to play
                 </div>
                 <div class="status started paused stopped">
-                    <span>{{ game.deckCount }}</span><span>{{ game.deckCount | suffix }}</span>
+                    <span>{{ deckCount }}</span><span>{{ deckCount | suffix }}</span>
                     deck
                     &nbsp;
                     blackjacks
                     <span class="highlight">
-                        <span>{{ game.blackjacks }}</span>/<span>{{ game.levelBlackjacks }}</span>
+                        <span>{{ blackjacks }}</span>/<span>{{ levelBlackjacks }}</span>
                     </span>
                     &nbsp;
                     score
-                    <span class="highlight">{{ game.score }}</span>
+                    <span class="highlight">{{ score }}</span>
                 </div>
                 <div class="creators">
                     <div class="person">
