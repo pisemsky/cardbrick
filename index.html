@@ -14,7 +14,11 @@
             <div class="screen" :class="state">
                 <div class="table" :class="table">
                     <game-initial-screen></game-initial-screen>
-                    <game-started-screen :game="game"></game-started-screen>
+                    <game-started-screen :deck="deck"
+                                         :deck-rows="deckRows"
+                                         :deck-rows-step="deckRowsStep"
+                                         :screen-cards="screenCards"
+                                         :blackjack="blackjack"></game-started-screen>
                     <game-paused-screen></game-paused-screen>
                     <game-stopped-screen></game-stopped-screen>
                 </div>
@@ -61,15 +65,15 @@
         <script type="text/x-template" id="game-started-screen">
             <div class="field started">
                 <game-deck-card :card="card"
-                                :deck-rows="game.deckRows"
-                                :deck-rows-step="game.deckRowsStep"
-                                v-for="card in game.deck"></game-deck-card>
+                                :deck-rows="deckRows"
+                                :deck-rows-step="deckRowsStep"
+                                v-for="card in deck"></game-deck-card>
                 <game-card :card="card"
-                           v-for="card in game.screenCards"
+                           v-for="card in screenCards"
                            v-if="card"></game-card>
-                <game-blackjack :blackjack="game.blackjack"
-                                :deck-rows="game.deckRows"
-                                v-if="game.blackjack"></game-blackjack>
+                <game-blackjack :blackjack="blackjack"
+                                :deck-rows="deckRows"
+                                v-if="blackjack"></game-blackjack>
             </div>
         </script>
         <script type="text/x-template" id="game-paused-screen">

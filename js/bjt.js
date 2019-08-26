@@ -27,9 +27,6 @@ Vue.component('game-app', {
         },
         deckRows: function () {
             return Math.ceil(this.ranks.length * this.suits.length / this.cols);
-        },
-        game: function () {
-            return this;
         }
     },
     methods: {
@@ -309,7 +306,7 @@ Vue.component('game-initial-screen', {
 });
 
 Vue.component('game-started-screen', {
-    props: ['game'],
+    props: ['deck', 'deckRows', 'deckRowsStep', 'screenCards', 'blackjack'],
     template: '#game-started-screen'
 });
 
