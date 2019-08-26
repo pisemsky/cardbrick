@@ -15,16 +15,16 @@ Vue.component('game-app', {
             cards: [],
             currentCard: null,
             mainLoop: null,
-            started: false,
-            paused: false,
             blackjack: null,
             screenCards: {},
-            screenTable: 'spades',
             state: 'initial',
             deckRowsStep: 2
         };
     },
     computed: {
+        table: function () {
+            return this.suits[(this.deckCount + 3) % this.suits.length];
+        },
         deckRows: function () {
             return Math.ceil(this.ranks.length * this.suits.length / this.cols);
         },
@@ -40,7 +40,6 @@ Vue.component('game-app', {
                     Vue.set(this.screenCards, i + '-' + j, card);
                 }
             }
-            this.screenTable = this.suits[(this.deckCount + 3) % this.suits.length];
         },
         dispatchControls: function (event) {
             var preventDefault = true;
@@ -73,7 +72,7 @@ Vue.component('game-app', {
             }
         },
         start: function () {
-            if (this.started) {
+            if (this.state == 'started') {
                 return;
             }
 
@@ -97,24 +96,22 @@ Vue.component('game-app', {
         },
         stop: function () {
             this.stopLoop();
-            this.started = false;
             this.state = 'stopped';
         },
         pause: function () {
-            if (this.started) {
-                if (this.paused) {
-                    this.paused = false;
+            switch (this.state) {
+                case 'started':
+                    this.stopLoop();
+                    this.state = 'paused';
+                    break;
+                case 'paused':
                     this.startLoop();
                     this.state = 'started';
-                } else {
-                    this.stopLoop();
-                    this.paused = true;
-                    this.state = 'paused';
-                }
+                    break;
             }
         },
         left: function () {
-            if (this.started && !this.paused && this.currentCard) {
+            if (this.state == 'started' && this.currentCard) {
                 var card = this.currentCard;
                 if (card.x > 0 && this.cards[card.y][card.x - 1] == null) {
                     this.cards[card.y][card.x - 1] = card;
@@ -125,7 +122,7 @@ Vue.component('game-app', {
             }
         },
         right: function () {
-            if (this.started && !this.paused && this.currentCard) {
+            if (this.state == 'started' && this.currentCard) {
                 var card = this.currentCard;
                 if (card.x < (this.cols - 1) && this.cards[card.y][card.x + 1] == null) {
                     this.cards[card.y][card.x + 1] = card;
@@ -136,7 +133,7 @@ Vue.component('game-app', {
             }
         },
         down: function () {
-            if (this.started && !this.paused) {
+            if (this.state == 'started') {
                 this.stopLoop();
                 if (this.currentCard) {
                     while (true) {
@@ -146,7 +143,7 @@ Vue.component('game-app', {
                     }
                 }
                 this.main();
-                if (this.started) {
+                if (this.state == 'started') {
                     this.startLoop();
                 }
             }
@@ -259,8 +256,8 @@ Vue.component('game-app', {
             return false;
         },
         main: function () {
-            if (!this.started) {
-                this.started = true;
+            if (this.state != 'started') {
+                this.state = 'started';
             }
             if (this.currentCard && this.lowerCard(this.currentCard)) {
                 this.draw();
