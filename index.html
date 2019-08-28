@@ -17,7 +17,7 @@
                     <game-started-screen :deck="deck"
                                          :deck-rows="deckRows"
                                          :deck-rows-step="deckRowsStep"
-                                         :screen-cards="screenCards"
+                                         :cards="cards"
                                          :blackjack="blackjack"></game-started-screen>
                     <game-paused-screen></game-paused-screen>
                     <game-stopped-screen></game-stopped-screen>
@@ -65,11 +65,13 @@
         <script type="text/x-template" id="game-started-screen">
             <div class="field started">
                 <game-deck-card :card="card"
+                                :key="card.id"
                                 :deck-rows="deckRows"
                                 :deck-rows-step="deckRowsStep"
                                 v-for="card in deck"></game-deck-card>
                 <game-card :card="card"
-                           v-for="card in screenCards"
+                           :key="card.id"
+                           v-for="card in cards"
                            v-if="card"></game-card>
                 <game-blackjack :blackjack="blackjack"
                                 :deck-rows="deckRows"

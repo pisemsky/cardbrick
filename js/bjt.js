@@ -16,7 +16,6 @@ Vue.component('game-app', {
             currentCard: null,
             mainLoop: null,
             blackjack: null,
-            screenCards: {},
             state: 'initial',
             deckRowsStep: 2
         };
@@ -30,14 +29,6 @@ Vue.component('game-app', {
         }
     },
     methods: {
-        draw: function () {
-            for (i = 0; i < this.rows; i++) {
-                for (j = 0; j < this.cols; j++) {
-                    var card = this.cards[i][j];
-                    Vue.set(this.screenCards, i + '-' + j, card);
-                }
-            }
-        },
         dispatchControls: function (event) {
             var preventDefault = true;
             switch (event.keyCode) {
@@ -79,12 +70,6 @@ Vue.component('game-app', {
             this.deckCount = 0;
 
             this.generateDeck();
-            for (i = 0; i < this.rows; i++) {
-                this.cards[i] = {};
-                for (j = 0; j < this.cols; j++) {
-                    this.cards[i][j] = null;
-                }
-            }
             this.currentCard = null;
 
             this.state = 'started';
@@ -110,23 +95,17 @@ Vue.component('game-app', {
         left: function () {
             if (this.state == 'started' && this.currentCard) {
                 var card = this.currentCard;
-                if (card.x > 0 && this.cards[card.y][card.x - 1] == null) {
-                    this.cards[card.y][card.x - 1] = card;
-                    this.cards[card.y][card.x] = null;
+                if (card.x > 0 && !this.findCard(card.x - 1, card.y)) {
                     card.x -= 1;
                 }
-                this.draw();
             }
         },
         right: function () {
             if (this.state == 'started' && this.currentCard) {
                 var card = this.currentCard;
-                if (card.x < (this.cols - 1) && this.cards[card.y][card.x + 1] == null) {
-                    this.cards[card.y][card.x + 1] = card;
-                    this.cards[card.y][card.x] = null;
+                if (card.x < (this.cols - 1) && !this.findCard(card.x + 1, card.y)) {
                     card.x += 1;
                 }
-                this.draw();
             }
         },
         down: function () {
@@ -167,9 +146,7 @@ Vue.component('game-app', {
             }
         },
         lowerCard: function (card) {
-            if (card.y < (this.rows - 1) && this.cards[card.y + 1][card.x] == null) {
-                this.cards[card.y + 1][card.x] = card;
-                this.cards[card.y][card.x] = null;
+            if (card.y < (this.rows - 1) && !this.findCard(card.x, card.y + 1)) {
                 card.y += 1;
                 return true;
             }
@@ -177,9 +154,16 @@ Vue.component('game-app', {
         },
         generateDeck: function () {
             var cards = [];
+            var deckCount = this.deckCount + 1;
             for (i = 0; i < this.suits.length; i++) {
                 for (j = 0; j < this.ranks.length; j++) {
-                    cards.push({rank: this.ranks[j], suit: this.suits[i]});
+                    var rank = this.ranks[j];
+                    var suit = this.suits[i];
+                    cards.push({
+                        rank: rank,
+                        suit: suit,
+                        id: rank + '-' + suit + '-' + deckCount
+                    });
                 }
             }
             var i = 0;
@@ -198,19 +182,24 @@ Vue.component('game-app', {
                 cards.splice(key, 1);
                 i++;
             }
-            this.deckCount += 1;
+            this.deckCount = deckCount;
         },
         removeCards: function (cards) {
             for (key in cards) {
                 var card = cards[key];
-                this.cards[card.y][card.x] = null;
+                this.cards.splice(this.cards.indexOf(card), 1);
                 for (y = card.y - 1; y >= 0; y--) {
-                    var cardAbove = this.cards[y][card.x];
+                    var cardAbove = this.findCard(card.x, y);
                     if (cardAbove) {
                         this.lowerCard(cardAbove);
                     }
                 }
             }
+        },
+        findCard: function (x, y) {
+            return this.cards.find(function (card) {
+                return card.x == x && card.y == y;
+            });
         },
         findBlackjack: function () {
             for (i = this.rows - 1; i >= 0; i--) {
@@ -218,7 +207,7 @@ Vue.component('game-app', {
                     var sequence = [];
                     var sequenceSum = 0;
                     for (k = j; k < this.cols; k++) {
-                        var card = this.cards[i][k];
+                        var card = this.findCard(k, i);
                         if (card) {
                             sequence.push(card);
                             sequenceSum += card.value;
@@ -245,19 +234,18 @@ Vue.component('game-app', {
             return parseInt(card.rank);
         },
         addCard: function (card) {
-            if (this.cards[0][card.x] == null) {
-                card.y = 0;
-                this.cards[0][card.x] = card;
-                return true;
+            if (this.findCard(card.x, 0)) {
+                return false;
             }
-            return false;
+            Vue.set(card, 'y', 0);
+            this.cards.push(card);
+            return true;
         },
         main: function () {
             if (this.state != 'started') {
                 this.state = 'started';
             }
             if (this.currentCard && this.lowerCard(this.currentCard)) {
-                this.draw();
                 return;
             }
             var blackjack = this.findBlackjack();
@@ -271,7 +259,6 @@ Vue.component('game-app', {
                 this.score += 21;
                 this.removeCards(blackjack);
                 this.currentCard = null;
-                this.draw();
                 return;
             }
             this.blackjack = null;
@@ -292,7 +279,6 @@ Vue.component('game-app', {
                 this.stop();
                 return;
             }
-            this.draw();
         }
     },
     mounted: function () {
@@ -306,7 +292,7 @@ Vue.component('game-initial-screen', {
 });
 
 Vue.component('game-started-screen', {
-    props: ['deck', 'deckRows', 'deckRowsStep', 'screenCards', 'blackjack'],
+    props: ['deck', 'deckRows', 'deckRowsStep', 'cards', 'blackjack'],
     template: '#game-started-screen'
 });
 
