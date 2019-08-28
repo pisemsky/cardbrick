@@ -11,7 +11,12 @@
             <game-app></game-app>
         </div>
         <script type="text/x-template" id="game-app">
-            <div class="screen" :class="state">
+            <div class="screen" :class="state" tabindex="0" v-focus
+                 @keydown.enter.prevent="start()"
+                 @keydown.pause.prevent="pause()"
+                 @keydown.space.prevent="down()"
+                 @keydown.right.prevent="right()"
+                 @keydown.left.prevent="left()">
                 <div class="table" :class="table">
                     <game-initial-screen></game-initial-screen>
                     <game-started-screen :deck="deck"

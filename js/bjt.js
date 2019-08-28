@@ -29,36 +29,6 @@ Vue.component('game-app', {
         }
     },
     methods: {
-        dispatchControls: function (event) {
-            var preventDefault = true;
-            switch (event.keyCode) {
-                case 37:
-                case 65:
-                    this.left();
-                    break;
-                case 39:
-                case 68:
-                    this.right();
-                    break;
-                case 40:
-                case 83:
-                case 32:
-                    this.down();
-                    break;
-                case 80:
-                case 145:
-                    this.throttle(this.pause, 1000);
-                    break;
-                case 13:
-                    this.start();
-                    break;
-                default:
-                    preventDefault = false;
-            }
-            if (preventDefault) {
-                event.preventDefault();
-            }
-        },
         start: function () {
             if (this.state == 'started') {
                 return;
@@ -69,6 +39,7 @@ Vue.component('game-app', {
             this.score = 0;
             this.deckCount = 0;
 
+            this.cards.splice(0, this.cards.length);
             this.generateDeck();
             this.currentCard = null;
 
@@ -80,7 +51,7 @@ Vue.component('game-app', {
             this.stopLoop();
             this.state = 'stopped';
         },
-        pause: function () {
+        pauseFunc: function () {
             switch (this.state) {
                 case 'started':
                     this.stopLoop();
@@ -91,6 +62,9 @@ Vue.component('game-app', {
                     this.state = 'started';
                     break;
             }
+        },
+        pause: function () {
+            this.throttle(this.pauseFunc, 1000);
         },
         left: function () {
             if (this.state == 'started' && this.currentCard) {
@@ -281,9 +255,6 @@ Vue.component('game-app', {
             }
         }
     },
-    mounted: function () {
-        window.onkeydown = this.dispatchControls;
-    },
     template: '#game-app'
 });
 
@@ -330,6 +301,12 @@ Vue.filter('suffix', function (value) {
         var suffix = 'th';
     }
     return suffix;
+});
+
+Vue.directive('focus', {
+    inserted: function (el) {
+        el.focus();
+    }
 });
 
 var app = new Vue({
