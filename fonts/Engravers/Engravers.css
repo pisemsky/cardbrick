@@ -1,9 +1,0 @@
-@font-face {
-    font-family: 'Engravers';
-    src: url('fonts/Engravers.eot');
-    src: url('fonts/Engravers.eot') format('embedded-opentype'),
-         url('fonts/Engravers.woff2') format('woff2'),
-         url('fonts/Engravers.woff') format('woff'),
-         url('fonts/Engravers.ttf') format('truetype'),
-         url('fonts/Engravers.svg#Engravers') format('svg');
-}

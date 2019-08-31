@@ -145,7 +145,7 @@ Vue.component('game-app', {
                 var key = Math.floor(Math.random() * cards.length);
                 var card = cards[key];
                 card.value = this.cardValue(card);
-                card.deckRow = parseInt(i / this.cols);
+                card.deckRow = parseInt(i / this.cols, 10);
                 var reverse = card.deckRow % 2;
                 if (reverse) {
                     card.x = Math.abs(i % this.cols - this.cols + 1);
@@ -205,7 +205,7 @@ Vue.component('game-app', {
             if (card.rank == 'A') {
                 return 1;
             }
-            return parseInt(card.rank);
+            return parseInt(card.rank, 10);
         },
         addCard: function (card) {
             if (this.findCard(card.x, 0)) {
@@ -277,17 +277,44 @@ Vue.component('game-stopped-screen', {
 
 Vue.component('game-deck-card', {
     props: ['card', 'deckRows', 'deckRowsStep'],
-    template: '#game-deck-card'
+    template: '#game-deck-card',
+    computed: {
+        styleObject: function () {
+            return {
+                left: (96 * this.card.x) + 'px',
+                top: (12 - 144 - this.deckRows * this.deckRowsStep + (this.card.deckRow + 1) * this.deckRowsStep) + 'px',
+                zIndex: Math.abs(this.card.deckRow - this.deckRows)
+            }
+        }
+    }
 });
 
 Vue.component('game-card', {
     props: ['card'],
-    template: '#game-card'
+    template: '#game-card',
+    computed: {
+        styleObject: function () {
+            return {
+                left: (96 * this.card.x) + 'px',
+                top: (144 * this.card.y + 12) + 'px'
+            }
+        }
+    }
 });
 
 Vue.component('game-blackjack', {
     props: ['blackjack', 'deckRows'],
-    template: '#game-blackjack'
+    template: '#game-blackjack',
+    computed: {
+        styleObject: function () {
+            return {
+                left: (96 * this.blackjack.x) + 'px',
+                top: (144 * this.blackjack.y + 12) + 'px',
+                width: (96 * this.blackjack.length) + 'px',
+                zIndex: this.deckRows + 1
+            }
+        }
+    }
 });
 
 Vue.filter('suffix', function (value) {

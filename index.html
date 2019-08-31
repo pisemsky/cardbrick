@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>Blackjack Tetris</title>
-        <link href="fonts/Engravers/Engravers.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans+SC" rel="stylesheet">
         <link href="css/bjt.css" rel="stylesheet">
     </head>
     <body>
@@ -11,26 +11,27 @@
             <game-app></game-app>
         </div>
         <script type="text/x-template" id="game-app">
-            <div class="screen" :class="state" tabindex="0" v-focus
+            <div class="screen" tabindex="0" v-focus
                  @keydown.enter.prevent="start()"
                  @keydown.pause.prevent="pause()"
                  @keydown.space.prevent="down()"
                  @keydown.right.prevent="right()"
                  @keydown.left.prevent="left()">
                 <div class="table" :class="table">
-                    <game-initial-screen></game-initial-screen>
-                    <game-started-screen :deck="deck"
+                    <game-initial-screen v-if="state == 'initial'"></game-initial-screen>
+                    <game-started-screen v-if="state == 'started'"
+                                         :deck="deck"
                                          :deck-rows="deckRows"
                                          :deck-rows-step="deckRowsStep"
                                          :cards="cards"
                                          :blackjack="blackjack"></game-started-screen>
-                    <game-paused-screen></game-paused-screen>
-                    <game-stopped-screen></game-stopped-screen>
+                    <game-paused-screen v-if="state == 'paused'"></game-paused-screen>
+                    <game-stopped-screen v-if="state == 'stopped'"></game-stopped-screen>
                 </div>
-                <div class="status initial">
+                <div class="status" v-if="state == 'initial'">
                     press <span class="highlight">enter</span> to play
                 </div>
-                <div class="status started paused stopped">
+                <div class="status" v-if="state != 'initial'">
                     <span>{{ deckCount }}</span><span>{{ deckCount | suffix }}</span>
                     deck
                     &nbsp;
@@ -54,7 +55,7 @@
             </div>
         </script>
         <script type="text/x-template" id="game-initial-screen">
-            <div class="field initial">
+            <div class="field">
                 <div class="card spades big">
                     <div class="card-inner">
                         <div class="card-top">
@@ -68,7 +69,7 @@
             </div>
         </script>
         <script type="text/x-template" id="game-started-screen">
-            <div class="field started">
+            <div class="field">
                 <game-deck-card :card="card"
                                 :key="card.id"
                                 :deck-rows="deckRows"
@@ -84,7 +85,7 @@
             </div>
         </script>
         <script type="text/x-template" id="game-paused-screen">
-            <div class="field paused">
+            <div class="field">
                 <div class="card big empty">
                     <div class="card-inner">
                         <div class="card-center">pause</div>
@@ -93,7 +94,7 @@
             </div>
         </script>
         <script type="text/x-template" id="game-stopped-screen">
-            <div class="field stopped">
+            <div class="field">
                 <div class="card big empty">
                     <div class="card-inner">
                         <div class="card-top">
@@ -110,7 +111,7 @@
         <script type="text/x-template" id="game-card">
             <div class="card"
                  :class="card.suit"
-                 :style="{left: (96 * card.x) + 'px', top: (144 * card.y + 12) + 'px'}">
+                 :style="styleObject">
                 <div class="card-inner">
                     <div class="card-top">
                         <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
@@ -123,14 +124,14 @@
         </script>
         <script type="text/x-template" id="game-blackjack">
             <div class="card blackjack"
-                 :style="{left: (96 * blackjack.x) + 'px', top: (144 * blackjack.y + 12) + 'px', width: (96 * blackjack.length) + 'px', zIndex: deckRows + 1}">
+                 :style="styleObject">
                 <div class="card-inner"></div>
             </div>
         </script>
         <script type="text/x-template" id="game-deck-card">
             <div class="card empty"
                  :class="card.suit"
-                 :style="{left: (96 * card.x) + 'px', top: (12 - 144 - deckRows * deckRowsStep + (card.deckRow + 1) * deckRowsStep) + 'px', zIndex: Math.abs(card.deckRow - deckRows)}">
+                 :style="styleObject">
                 <div class="card-inner">
                 </div>
             </div>

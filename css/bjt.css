@@ -3,13 +3,6 @@ body {
     background: #ffffff;
 }
 
-.screen.initial .initial,
-.screen.started .started,
-.screen.paused .paused,
-.screen.stopped .stopped {
-    display: block;
-}
-
 .table {
     min-width: 1008px;
     height: 600px;
@@ -39,7 +32,6 @@ body {
 }
 
 .field {
-    display: none;
     position: relative;
     width: 960px;
     height: 576px;
@@ -89,14 +81,14 @@ body {
     display: inline-block;
     vertical-align: middle;
     padding: 6px;
-    font-family: 'Engravers', sans-serif;
+    font-family: 'Alegreya Sans SC', sans-serif;
     font-size: 24px;
     line-height: 1;
 }
 
 .card-rank {
     vertical-align: middle;
-    font-family: 'Engravers', sans-serif;
+    font-family: 'Alegreya Sans SC', sans-serif;
     font-size: 24px;
 }
 
@@ -174,9 +166,8 @@ body {
 }
 
 .status {
-    display: none;
     line-height: 48px;
-    font-family: 'Engravers', sans-serif;
+    font-family: 'Alegreya Sans SC', sans-serif;
     font-size: 24px;
     text-align: center;
 }
@@ -187,7 +178,7 @@ body {
 
 .creators {
     line-height: 48px;
-    font-family: 'Engravers', sans-serif;
+    font-family: 'Alegreya Sans SC', sans-serif;
     text-align: center;
 }
 
@@ -219,7 +210,7 @@ body {
     margin: 18px 0;
     border-radius: 12px;
     line-height: 64px;
-    font-family: 'Engravers', sans-serif;
+    font-family: 'Alegreya Sans SC', sans-serif;
     font-size: 48px;
     text-decoration: none;
     text-align: center;
