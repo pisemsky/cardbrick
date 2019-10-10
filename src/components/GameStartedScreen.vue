@@ -30,3 +30,13 @@ export default {
   props: ['deck', 'deckRows', 'deckRowsStep', 'cards', 'blackjack']
 }
 </script>
+
+<style scoped>
+.field {
+  position: relative;
+  width: 960px;
+  height: 576px;
+  padding-top: 12px;
+  margin: 0 auto;
+}
+</style>

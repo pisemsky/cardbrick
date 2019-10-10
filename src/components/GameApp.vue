@@ -316,3 +316,72 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.table {
+  min-width: 1008px;
+  height: 600px;
+  margin: 0 auto;
+  box-shadow: inset 0 0 12px 0 #ffffff;
+  background: url('../assets/back_a.png');
+}
+
+.table.spades {
+  background: url('../assets/mark_a.png') center no-repeat, url('../assets/back_a.png');
+  background-size: auto 225px, auto;
+}
+
+.table.clubs {
+  background: url('../assets/mark_b.png') center no-repeat, url('../assets/back_a.png');
+  background-size: auto 225px, auto;
+}
+
+.table.diamonds {
+  background: url('../assets/mark_c.png') center no-repeat, url('../assets/back_a.png');
+  background-size: auto 225px, auto;
+}
+
+.table.hearts {
+  background: url('../assets/mark_d.png') center no-repeat, url('../assets/back_a.png');
+  background-size: auto 225px, auto;
+}
+
+.status {
+  line-height: 48px;
+  font-family: 'Alegreya Sans SC', sans-serif;
+  font-size: 24px;
+  text-align: center;
+}
+
+.highlight {
+  color: #ff0000;
+}
+
+.creators {
+  line-height: 48px;
+  font-family: 'Alegreya Sans SC', sans-serif;
+  text-align: center;
+}
+
+.person {
+  position: relative;
+  display: inline-block;
+  width: 126px;
+}
+
+.name {
+  position: relative;
+  color: #00de9a;
+  text-decoration: none;
+  font-size: 24px;
+  z-index: 10;
+}
+
+.function {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  font-size: 15px;
+  line-height: 24px;
+}
+</style>
