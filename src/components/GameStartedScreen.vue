@@ -7,8 +7,7 @@
                     v-for="card in deck"></game-deck-card>
     <game-card :card="card"
                :key="card.id"
-               v-for="card in cards"
-               v-if="card"></game-card>
+               v-for="card in cards"></game-card>
     <game-blackjack :blackjack="blackjack"
                     :deck-rows="deckRows"
                     v-if="blackjack"></game-blackjack>

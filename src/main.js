@@ -5,15 +5,14 @@ Vue.config.productionTip = false
 
 Vue.filter('suffix', function (value) {
   if (value == 1) {
-    var suffix = 'st'
+    return 'st'
   } else if (value == 2) {
-    var suffix = 'nd'
+    return 'nd'
   } else if (value == 3) {
-    var suffix = 'rd'
+    return 'rd'
   } else {
-    var suffix = 'th'
+    return 'th'
   }
-  return suffix
 })
 
 Vue.directive('focus', {
