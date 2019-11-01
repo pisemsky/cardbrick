@@ -31,15 +31,6 @@
       score
       <span class="highlight">{{ score }}</span>
     </div>
-    <div class="creators">
-      <div class="person">
-        <a class="name" href="http://datadweller.com">denny</a>
-        <div class="function">designer</div>
-      </div><div class="person">
-        <a class="name" href="https://pisemsky.com">evgeny</a>
-        <div class="function">developer</div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -348,40 +339,12 @@ export default {
 
 .status {
   line-height: 48px;
-  font-family: 'Alegreya Sans SC', sans-serif;
+  font-family: sans-serif;
   font-size: 24px;
   text-align: center;
 }
 
 .highlight {
   color: #ff0000;
-}
-
-.creators {
-  line-height: 48px;
-  font-family: 'Alegreya Sans SC', sans-serif;
-  text-align: center;
-}
-
-.person {
-  position: relative;
-  display: inline-block;
-  width: 126px;
-}
-
-.name {
-  position: relative;
-  color: #00de9a;
-  text-decoration: none;
-  font-size: 24px;
-  z-index: 10;
-}
-
-.function {
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  font-size: 15px;
-  line-height: 24px;
 }
 </style>

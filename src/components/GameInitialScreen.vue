@@ -62,7 +62,7 @@
 
 .card-rank {
   vertical-align: middle;
-  font-family: 'Alegreya Sans SC', sans-serif;
+  font-family: sans-serif;
   font-size: 24px;
 }
 

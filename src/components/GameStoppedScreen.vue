@@ -2,13 +2,7 @@
   <div class="field">
     <div class="card big empty">
       <div class="card-inner">
-        <div class="card-top">
-          <a class="social fb" href="https://www.facebook.com/sharer/sharer.php?u=https://pisemsky.com/blackjacktetris" target="_blank" rel="nofollow">F</a>
-        </div>
         <div class="card-center">game over</div>
-        <div class="card-bottom">
-          <a class="social vk" href="https://vk.com/share.php?url=https://pisemsky.com/blackjacktetris" target="_blank" rel="nofollow">V</a>
-        </div>
       </div>
     </div>
   </div>
@@ -65,7 +59,7 @@
   display: inline-block;
   vertical-align: middle;
   padding: 6px;
-  font-family: 'Alegreya Sans SC', sans-serif;
+  font-family: sans-serif;
   font-size: 24px;
   line-height: 1;
 }
@@ -95,26 +89,5 @@
 .card.empty .card-inner {
   background: #ffff00;
   border-color: #f2f200;
-}
-
-.social {
-  display: inline-block;
-  width: 64px;
-  margin: 18px 0;
-  border-radius: 12px;
-  line-height: 64px;
-  font-family: 'Alegreya Sans SC', sans-serif;
-  font-size: 48px;
-  text-decoration: none;
-  text-align: center;
-  color: #ffffff;
-}
-
-.social.fb {
-  background-color: #3a5795;
-}
-
-.social.vk {
-  background-color: #6281a3;
 }
 </style>

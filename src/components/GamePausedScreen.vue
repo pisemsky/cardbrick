@@ -42,7 +42,7 @@
   display: inline-block;
   vertical-align: middle;
   padding: 6px;
-  font-family: 'Alegreya Sans SC', sans-serif;
+  font-family: sans-serif;
   font-size: 24px;
   line-height: 1;
 }
