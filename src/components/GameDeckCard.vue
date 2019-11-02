@@ -1,5 +1,5 @@
 <template>
-  <div class="card empty"
+  <div class="card"
        :style="styleObject">
     <div class="card-inner">
     </div>
@@ -38,14 +38,9 @@ export default {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  border: solid 1px #f3f3f3;
+  border: solid 1px #f2f200;
   border-radius: 6px;
-  background: url('../assets/logo_b.png') center no-repeat #ffffff;
+  background-color: #ffff00;
   background-size: auto 36px;
-}
-
-.card.empty .card-inner {
-  background: #ffff00;
-  border-color: #f2f200;
 }
 </style>

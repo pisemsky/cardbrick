@@ -1,5 +1,5 @@
 <template>
-  <div class="card blackjack"
+  <div class="card"
        :style="styleObject">
     <div class="card-inner"></div>
   </div>
@@ -40,16 +40,6 @@ export default {
   height: 100%;
   border: solid 1px #f3f3f3;
   border-radius: 6px;
-  background: url('../assets/logo_b.png') center no-repeat #ffffff;
-  background-size: auto 36px;
-}
-
-.card.blackjack .card-inner {
-  background: url('../assets/logo_a.png') center no-repeat #ffffff;
-  background-size: auto 66px;
-}
-
-.card.blackjack .card-top, .card.blackjack .card-bottom {
-  display: none;
+  background-color: #ffffff;
 }
 </style>

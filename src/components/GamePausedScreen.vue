@@ -1,6 +1,6 @@
 <template>
   <div class="field">
-    <div class="card big empty">
+    <div class="card big">
       <div class="card-inner">
         <div class="card-center">pause</div>
       </div>
@@ -32,10 +32,9 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  border: solid 1px #f3f3f3;
+  border: solid 1px #f2f200;
   border-radius: 6px;
-  background: url('../assets/logo_b.png') center no-repeat #ffffff;
-  background-size: auto 36px;
+  background-color: #ffff00;
 }
 
 .card-center {
@@ -57,12 +56,5 @@
 
 .card.big .card-inner {
   border-radius: 24px;
-  background: url('../assets/logo_a.png') center no-repeat #ffffff;
-  background-size: auto 144px;
-}
-
-.card.empty .card-inner {
-  background: #ffff00;
-  border-color: #f2f200;
 }
 </style>

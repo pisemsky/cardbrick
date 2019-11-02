@@ -46,8 +46,7 @@ export default {
   height: 100%;
   border: solid 1px #f3f3f3;
   border-radius: 6px;
-  background: url('../assets/logo_b.png') center no-repeat #ffffff;
-  background-size: auto 36px;
+  background-color: #ffffff;
 }
 
 .card-top, .card-bottom {
@@ -75,7 +74,7 @@ export default {
 
 .card-suit {
   vertical-align: middle;
-  font-family: 'MS Gothic', 'Arial', sans-serif;
+  font-family: sans-serif;
   font-size: 18px;
 }
 
