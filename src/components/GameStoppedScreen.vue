@@ -1,22 +1,12 @@
 <template>
-  <div class="field">
-    <div class="card big empty">
-      <div class="card-inner">
-        <div class="card-center">game over</div>
-      </div>
+  <div class="card big empty">
+    <div class="card-inner">
+      <div class="card-center">game over</div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.field {
-  position: relative;
-  width: 960px;
-  height: 576px;
-  padding-top: 12px;
-  margin: 0 auto;
-}
-
 .card {
   position: absolute;
   width: 96px;
@@ -59,7 +49,6 @@
   display: inline-block;
   vertical-align: middle;
   padding: 6px;
-  font-family: sans-serif;
   font-size: 24px;
   line-height: 1;
 }

@@ -41,6 +41,5 @@ export default {
   border: solid 1px #f2f200;
   border-radius: 6px;
   background-color: #ffff00;
-  background-size: auto 36px;
 }
 </style>

@@ -19,5 +19,6 @@ export default {
 body {
   margin: 0;
   background: #ffffff;
+  font-family: sans-serif;
 }
 </style>

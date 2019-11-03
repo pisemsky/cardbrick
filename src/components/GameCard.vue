@@ -1,14 +1,11 @@
 <template>
   <div class="card"
-       :class="card.suit"
-       :style="styleObject">
-    <div class="card-inner">
-      <div class="card-top">
-        <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
-      </div>
-      <div class="card-bottom">
-        <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
-      </div>
+       :class="card.suit">
+    <div class="card-top">
+      <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
+    </div>
+    <div class="card-bottom">
+      <span class="card-rank">{{ card.rank }}</span><span class="card-suit"></span>
     </div>
   </div>
 </template>
@@ -16,34 +13,18 @@
 <script>
 export default {
   name: 'GameCard',
-  props: ['card'],
-  computed: {
-    styleObject: function () {
-      return {
-        left: (96 * this.card.x) + 'px',
-        top: (144 * this.card.y + 12) + 'px'
-      }
-    }
-  }
+  props: ['card']
 }
 </script>
 
 <style scoped>
 .card {
-  position: absolute;
-  width: 96px;
-  height: 144px;
-  line-height: 144px;
-  text-align: center;
-  transition-property: top;
-  transition-duration: 0.2s;
-}
-
-.card-inner {
   position: relative;
-  box-sizing: border-box;
   width: 100%;
   height: 100%;
+  line-height: 100%;
+  text-align: center;
+  box-sizing: border-box;
   border: solid 1px #f3f3f3;
   border-radius: 6px;
   background-color: #ffffff;
@@ -68,13 +49,11 @@ export default {
 
 .card-rank {
   vertical-align: middle;
-  font-family: sans-serif;
   font-size: 24px;
 }
 
 .card-suit {
   vertical-align: middle;
-  font-family: sans-serif;
   font-size: 18px;
 }
 

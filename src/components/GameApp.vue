@@ -6,15 +6,17 @@
        @keydown.right.prevent="right()"
        @keydown.left.prevent="left()">
     <div class="table">
-      <game-initial-screen v-if="state == 'initial'"></game-initial-screen>
-      <game-started-screen v-if="state == 'started'"
-                           :deck="deck"
-                           :deck-rows="deckRows"
-                           :deck-rows-step="deckRowsStep"
-                           :cards="cards"
-                           :blackjack="blackjack"></game-started-screen>
-      <game-paused-screen v-if="state == 'paused'"></game-paused-screen>
-      <game-stopped-screen v-if="state == 'stopped'"></game-stopped-screen>
+      <div class="field">
+        <game-initial-screen v-if="state == 'initial'"></game-initial-screen>
+        <game-started-screen v-if="state == 'started'"
+                             :deck="deck"
+                             :deck-rows="deckRows"
+                             :deck-rows-step="deckRowsStep"
+                             :cards="cards"
+                             :blackjack="blackjack"></game-started-screen>
+        <game-paused-screen v-if="state == 'paused'"></game-paused-screen>
+        <game-stopped-screen v-if="state == 'stopped'"></game-stopped-screen>
+      </div>
     </div>
     <div class="status" v-if="state == 'initial'">
       press <span class="highlight">enter</span> to play
@@ -317,9 +319,16 @@ export default {
   background-color: #00fa9a;
 }
 
+.field {
+  position: relative;
+  width: 960px;
+  height: 576px;
+  padding-top: 12px;
+  margin: 0 auto;
+}
+
 .status {
   line-height: 48px;
-  font-family: sans-serif;
   font-size: 24px;
   text-align: center;
 }
