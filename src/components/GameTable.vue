@@ -1,10 +1,5 @@
 <template>
-  <div class="started-screen">
-    <game-deck-card :card="card"
-                    :key="card.id"
-                    :deck-rows="deckRows"
-                    :deck-rows-step="deckRowsStep"
-                    v-for="card in deck"></game-deck-card>
+  <div class="table">
     <game-card :card="card"
                :key="card.id"
                :style="getCardStyle(card)"
@@ -17,7 +12,7 @@
 </template>
 
 <style scoped>
-.started-screen {
+.table {
   width: 100%;
   height: 100%;
   display: grid;
@@ -27,18 +22,16 @@
 </style>
 
 <script>
-import GameDeckCard from './GameDeckCard.vue'
 import GameCard from './GameCard.vue'
 import GameBlackjack from './GameBlackjack.vue'
 
 export default {
-  name: 'GameStartedScreen',
+  name: 'GameTable',
   components: {
-    GameDeckCard,
     GameCard,
     GameBlackjack
   },
-  props: ['deck', 'deckRows', 'deckRowsStep', 'cards', 'blackjack'],
+  props: ['cards', 'blackjack'],
   methods: {
     getCardStyle(card) {
       return {

@@ -5,18 +5,16 @@
        @keydown.space.prevent="down()"
        @keydown.right.prevent="right()"
        @keydown.left.prevent="left()">
-    <div class="table">
-      <div class="field">
-        <game-message v-if="state == 'initial'" message="press enter to play"></game-message>
-        <game-started-screen v-if="state == 'started'"
-                             :deck="deck"
-                             :deck-rows="deckRows"
-                             :deck-rows-step="deckRowsStep"
-                             :cards="cards"
-                             :blackjack="blackjack"></game-started-screen>
-        <game-message v-if="state == 'paused'" message="pause"></game-message>
-        <game-message v-if="state == 'stopped'" message="game over"></game-message>
-      </div>
+    <div class="field">
+      <game-table v-if="state == 'started'"
+                  :cards="cards"
+                  :blackjack="blackjack"></game-table>
+      <game-message v-if="state == 'initial'"
+                    message="press enter to play"></game-message>
+      <game-message v-if="state == 'paused'"
+                    message="pause"></game-message>
+      <game-message v-if="state == 'stopped'"
+                    message="game over"></game-message>
     </div>
     <div class="status">
       <span>{{ deckCount }}</span><span>{{ deckCount | suffix }}</span>
@@ -35,13 +33,13 @@
 
 <script>
 import Vue from 'vue'
-import GameStartedScreen from './GameStartedScreen.vue'
+import GameTable from './GameTable.vue'
 import GameMessage from './GameMessage.vue'
 
 export default {
   name: 'GameApp',
   components: {
-    GameStartedScreen,
+    GameTable,
     GameMessage,
   },
   data: function () {
@@ -304,7 +302,7 @@ export default {
 </script>
 
 <style scoped>
-.table {
+.screen {
   min-width: 1008px;
   height: 600px;
   margin: 0 auto;
