@@ -13,11 +13,14 @@
 
 <style scoped>
 .table {
-  width: 100%;
-  height: 100%;
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(4, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  background-color: #00de9a;
 }
 </style>
 

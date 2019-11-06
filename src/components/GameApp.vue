@@ -16,18 +16,16 @@
       <game-message v-if="state == 'stopped'"
                     message="game over"></game-message>
     </div>
-    <div class="status">
-      <span>{{ deckCount }}</span><span>{{ deckCount | suffix }}</span>
-      deck
-      &nbsp;
-      blackjacks
-      <span class="highlight">
-        <span>{{ blackjacks }}</span>/<span>{{ levelBlackjacks }}</span>
-      </span>
-      &nbsp;
-      score
-      <span class="highlight">{{ score }}</span>
-    </div>
+    <dl class="status-left">
+      <dt>deck</dt>
+      <dd>{{ deckCount }}{{ deckCount | suffix }}</dd>
+      <dt>blackjacks</dt>
+      <dd>{{ blackjacks }}/{{ levelBlackjacks }}</dd>
+    </dl>
+    <dl class="status-right">
+      <dt>score</dt>
+      <dd>{{ score }}</dd>
+    </dl>
   </div>
 </template>
 
@@ -47,7 +45,7 @@ export default {
       ranks: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'],
       suits: ['spades', 'clubs', 'diamonds', 'hearts'],
       cols: 10,
-      rows: 4,
+      rows: 6,
       levelBlackjacksIncrement: 6,
       levelBlackjacks: 0,
       blackjacks: 0,
@@ -303,28 +301,28 @@ export default {
 
 <style scoped>
 .screen {
-  min-width: 1008px;
-  height: 600px;
-  margin: 0 auto;
-  box-shadow: inset 0 0 12px 0 #ffffff;
-  background-color: #00fa9a;
+  display: grid;
+  grid-template-columns: 3fr 10fr 3fr;
+  grid-template-rows: 4fr 3fr 3fr;
+  grid-gap: 1rem;
+  box-sizing: border-box;
+  height: 100vh;
+  padding: 1rem;
 }
 
 .field {
-  position: relative;
-  width: 960px;
-  height: 576px;
-  padding-top: 12px;
-  margin: 0 auto;
+  grid-column: 2;
+  grid-row: 1 / 4;
+  height: 100%;
 }
 
-.status {
-  line-height: 48px;
-  font-size: 24px;
-  text-align: center;
+.status-left {
+  grid-column: 1;
+  grid-row: 1;
 }
 
-.highlight {
-  color: #ff0000;
+.status-right {
+  grid-column: 3;
+  grid-row: 1;
 }
 </style>

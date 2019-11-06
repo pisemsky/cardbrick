@@ -17,9 +17,7 @@ export default {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  border: solid 1px #f2f200;
-  border-radius: 24px;
   background-color: #ffff00;
-  font-size: 24px;
+  font-size: 2rem;
 }
 </style>
