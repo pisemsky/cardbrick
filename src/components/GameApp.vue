@@ -2,7 +2,7 @@
   <div class="screen" tabindex="0" v-focus
        @keydown.enter.prevent="start()"
        @keydown.pause.prevent="pause()"
-       @keydown.space.prevent="down()"
+       @keydown.down.prevent="down()"
        @keydown.right.prevent="right()"
        @keydown.left.prevent="left()">
     <div class="field">
@@ -71,22 +71,23 @@ export default {
   },
   methods: {
     start: function () {
-      if (this.state == 'started') {
-        return;
+      switch (this.state) {
+        case 'initial':
+        case 'stopped':
+          this.levelBlackjacks = this.levelBlackjacksIncrement;
+          this.blackjacks = 0;
+          this.score = 0;
+          this.deckCount = 0;
+
+          this.cards.splice(0, this.cards.length);
+          this.generateDeck();
+          this.currentCard = null;
+
+          this.state = 'started';
+          this.main();
+          this.startLoop();
+          break;
       }
-
-      this.levelBlackjacks = this.levelBlackjacksIncrement;
-      this.blackjacks = 0;
-      this.score = 0;
-      this.deckCount = 0;
-
-      this.cards.splice(0, this.cards.length);
-      this.generateDeck();
-      this.currentCard = null;
-
-      this.state = 'started';
-      this.main();
-      this.startLoop();
     },
     stop: function () {
       this.stopLoop();
