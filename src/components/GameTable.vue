@@ -5,7 +5,6 @@
                :style="getCardStyle(card)"
                v-for="card in cards"></game-card>
     <game-blackjack :blackjack="blackjack"
-                    :deck-rows="deckRows"
                     :style="getBlackjackStyle(blackjack)"
                     v-if="blackjack"></game-blackjack>
   </div>

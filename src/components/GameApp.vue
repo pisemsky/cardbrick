@@ -16,16 +16,12 @@
       <game-message v-if="state == 'stopped'"
                     message="game over"></game-message>
     </div>
-    <dl class="status-left">
-      <dt>deck</dt>
-      <dd>{{ deckCount }}{{ deckCount | suffix }}</dd>
-      <dt>blackjacks</dt>
-      <dd>{{ blackjacks }}/{{ levelBlackjacks }}</dd>
-    </dl>
-    <dl class="status-right">
-      <dt>score</dt>
-      <dd>{{ score }}</dd>
-    </dl>
+    <div class="status-left">
+      <game-status :mapping="{'deck': deckCount , 'speed': speed}"></game-status>
+    </div>
+    <div class="status-right">
+      <game-status :mapping="{'score': score, 'blackjacks': blackjacks + '/' + levelBlackjacks}"></game-status>
+    </div>
   </div>
 </template>
 
@@ -33,12 +29,14 @@
 import Vue from 'vue'
 import GameTable from './GameTable.vue'
 import GameMessage from './GameMessage.vue'
+import GameStatus from './GameStatus.vue'
 
 export default {
   name: 'GameApp',
   components: {
     GameTable,
     GameMessage,
+    GameStatus
   },
   data: function () {
     return {
