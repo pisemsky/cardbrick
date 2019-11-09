@@ -5,23 +5,23 @@
        @keydown.down.prevent="down()"
        @keydown.right.prevent="right()"
        @keydown.left.prevent="left()">
-    <div class="field">
+    <div class="field" @click.prevent="start()">
       <game-table v-if="state == 'started'"
                   :cards="cards"
                   :blackjack="blackjack"></game-table>
       <game-message v-if="state == 'initial'"
-                    message="press enter to play"></game-message>
+                    message="press enter or click to play"></game-message>
       <game-message v-if="state == 'paused'"
                     message="pause"></game-message>
       <game-message v-if="state == 'stopped'"
                     message="game over"></game-message>
     </div>
-    <div class="status-left">
-      <game-status :mapping="{'deck': deckCount , 'speed': speed}"></game-status>
-    </div>
-    <div class="status-right">
-      <game-status :mapping="{'score': score, 'blackjacks': blackjacks + '/' + levelBlackjacks}"></game-status>
-    </div>
+    <game-status class="status-left" :mapping="{'deck': deckCount , 'speed': speed}"></game-status>
+    <game-status class="status-right" :mapping="{'score': score, 'blackjacks': blackjacks + '/' + levelBlackjacks}"></game-status>
+    <game-button class="button-nw" caption="L" @click.prevent="left()"></game-button>
+    <game-button class="button-ne" caption="R" @click.prevent="right()"></game-button>
+    <game-button class="button-se" caption="D" @click.prevent="down()"></game-button>
+    <game-button class="button-sw" caption="P" @click.prevent="pause()"></game-button>
   </div>
 </template>
 
@@ -30,13 +30,15 @@ import Vue from 'vue'
 import GameTable from './GameTable.vue'
 import GameMessage from './GameMessage.vue'
 import GameStatus from './GameStatus.vue'
+import GameButton from './GameButton.vue'
 
 export default {
   name: 'GameApp',
   components: {
     GameTable,
     GameMessage,
-    GameStatus
+    GameStatus,
+    GameButton
   },
   data: function () {
     return {
@@ -318,10 +320,32 @@ export default {
 .status-left {
   grid-column: 1;
   grid-row: 1;
+  align-self: start;
 }
 
 .status-right {
   grid-column: 3;
   grid-row: 1;
+  align-self: start;
+}
+
+.button-nw {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.button-ne {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.button-se {
+  grid-column: 3;
+  grid-row: 3;
+}
+
+.button-sw {
+  grid-column: 1;
+  grid-row: 3;
 }
 </style>
