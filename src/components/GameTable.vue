@@ -15,6 +15,7 @@
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(6, 1fr);
+  grid-gap: 1px;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
