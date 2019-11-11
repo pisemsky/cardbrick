@@ -1,16 +1,15 @@
 <template>
   <div class="screen" tabindex="0" v-focus
-       @keydown.enter.prevent="start()"
        @keydown.pause.prevent="pause()"
        @keydown.down.prevent="down()"
        @keydown.right.prevent="right()"
        @keydown.left.prevent="left()">
-    <div class="field" @click.prevent="start()">
+    <div class="field">
       <game-table v-if="state == 'started'"
                   :cards="cards"
                   :blackjack="blackjack"></game-table>
       <game-message v-if="state == 'initial'"
-                    message="press enter or click to play"></game-message>
+                    message="press P to play"></game-message>
       <game-message v-if="state == 'paused'"
                     message="pause"></game-message>
       <game-message v-if="state == 'stopped'"
@@ -70,7 +69,11 @@ export default {
     }
   },
   methods: {
-    start: function () {
+    stop: function () {
+      this.stopLoop();
+      this.state = 'stopped';
+    },
+    pauseFunc: function () {
       switch (this.state) {
         case 'initial':
         case 'stopped':
@@ -87,14 +90,6 @@ export default {
           this.main();
           this.startLoop();
           break;
-      }
-    },
-    stop: function () {
-      this.stopLoop();
-      this.state = 'stopped';
-    },
-    pauseFunc: function () {
-      switch (this.state) {
         case 'started':
           this.stopLoop();
           this.state = 'paused';
