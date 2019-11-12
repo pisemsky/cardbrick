@@ -56,17 +56,8 @@ export default {
       currentCard: null,
       mainLoop: null,
       blackjack: null,
-      state: 'initial',
-      deckRowsStep: 2
+      state: 'initial'
     };
-  },
-  computed: {
-    table: function () {
-      return this.suits[(this.deckCount + 3) % this.suits.length];
-    },
-    deckRows: function () {
-      return Math.ceil(this.ranks.length * this.suits.length / this.cols);
-    }
   },
   methods: {
     stop: function () {
