@@ -26,6 +26,7 @@
 
 <script>
 import Vue from 'vue'
+import _ from 'lodash'
 import GameTable from './GameTable.vue'
 import GameMessage from './GameMessage.vue'
 import GameStatus from './GameStatus.vue'
@@ -64,7 +65,7 @@ export default {
       this.stopLoop();
       this.state = 'stopped';
     },
-    pauseFunc: function () {
+    pause: _.throttle(function () {
       switch (this.state) {
         case 'initial':
         case 'stopped':
@@ -90,10 +91,7 @@ export default {
           this.state = 'started';
           break;
       }
-    },
-    pause: function () {
-      this.throttle(this.pauseFunc, 1000);
-    },
+    }, 1000, {trailing: false}),
     left: function () {
       if (this.state == 'started' && this.currentCard) {
         var card = this.currentCard;
@@ -124,15 +122,6 @@ export default {
         if (this.state == 'started') {
           this.startLoop();
         }
-      }
-    },
-    throttle: function (callable, time) {
-      var self = this;
-      if (typeof(callable.throttle) == 'undefined') {
-        callable.call(self);
-        callable.throttle = setTimeout(function () {
-          delete(callable.throttle);
-        }, time);
       }
     },
     startLoop: function () {
