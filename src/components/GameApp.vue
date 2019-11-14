@@ -16,7 +16,7 @@
                     message="game over"></game-message>
     </div>
     <game-status class="status-left" :mapping="{'deck': deckCount , 'speed': speed}"></game-status>
-    <game-status class="status-right" :mapping="{'score': score, 'blackjacks': blackjacks + '/' + levelBlackjacks}"></game-status>
+    <game-status class="status-right" :mapping="{'score': score, 'blackjacks': blackjacks}"></game-status>
     <game-button class="button-nw" caption="L" @click.prevent="left()"></game-button>
     <game-button class="button-ne" caption="R" @click.prevent="right()"></game-button>
     <game-button class="button-se" caption="D" @click.prevent="down()"></game-button>
@@ -46,8 +46,6 @@ export default {
       suits: ['spades', 'clubs', 'diamonds', 'hearts'],
       cols: 10,
       rows: 6,
-      levelBlackjacksIncrement: 6,
-      levelBlackjacks: 0,
       blackjacks: 0,
       deckCount: 0,
       score: 0,
@@ -69,7 +67,6 @@ export default {
       switch (this.state) {
         case 'initial':
         case 'stopped':
-          this.levelBlackjacks = this.levelBlackjacksIncrement;
           this.blackjacks = 0;
           this.score = 0;
           this.deckCount = 0;
@@ -255,13 +252,6 @@ export default {
       this.blackjack = null;
       this.currentCard = this.deck.pop();
       if (!this.currentCard) {
-        if (this.blackjacks < this.levelBlackjacks) {
-          this.stop();
-          return;
-        }
-        if (this.blackjacks > 0 && this.blackjacks % this.levelBlackjacksIncrement == 0) {
-          this.levelBlackjacks += this.levelBlackjacksIncrement;
-        }
         this.generateDeck();
         this.main();
         return;
