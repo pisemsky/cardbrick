@@ -18,6 +18,6 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #ffff00;
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 </style>

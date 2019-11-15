@@ -16,9 +16,13 @@ export default {
 </script>
 
 <style>
+:root {
+  font-family: sans-serif;
+  font-size: calc(1vw + 1vh + .5vmin);
+}
+
 body {
   margin: 0;
   background: #ffffff;
-  font-family: sans-serif;
 }
 </style>

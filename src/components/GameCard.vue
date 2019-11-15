@@ -15,7 +15,7 @@ export default {
   align-items: center;
   justify-content: center;
   background-color: #ffffff;
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 
 .card.diamonds,

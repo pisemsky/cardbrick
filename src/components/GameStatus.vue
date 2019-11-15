@@ -19,7 +19,7 @@ dl {
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 dt {
@@ -30,6 +30,6 @@ dd {
   grid-column: 2;
   text-align: right;
   margin-left: 0;
-  color: red;
+  color: #ff0000;
 }
 </style>
