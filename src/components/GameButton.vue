@@ -17,5 +17,9 @@ export default {
   border: solid 1px gray;
   font-size: 1.5rem;
   cursor: pointer;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 </style>

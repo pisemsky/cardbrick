@@ -24,5 +24,6 @@ export default {
 body {
   margin: 0;
   background: #ffffff;
+  overscroll-behavior-y: contain;
 }
 </style>
