@@ -36,13 +36,13 @@ export default {
   },
   props: ['cards', 'blackjack'],
   methods: {
-    getCardStyle(card) {
+    getCardStyle (card) {
       return {
         'grid-column': card.x + 1,
         'grid-row': card.y + 1
       }
     },
-    getBlackjackStyle(blackjack) {
+    getBlackjackStyle (blackjack) {
       return {
         'grid-column-start': blackjack.x + 1,
         'grid-column-end': blackjack.x + 1 + blackjack.length,

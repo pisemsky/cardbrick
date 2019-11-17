@@ -40,7 +40,7 @@ export default {
     GameStatus,
     GameButton
   },
-  data: function () {
+  data () {
     return {
       ranks: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'],
       suits: ['spades', 'clubs', 'diamonds', 'hearts'],
@@ -56,209 +56,202 @@ export default {
       mainLoop: null,
       blackjack: null,
       state: 'initial'
-    };
+    }
   },
   methods: {
-    stop: function () {
-      this.stopLoop();
-      this.state = 'stopped';
+    stop () {
+      this.stopLoop()
+      this.state = 'stopped'
     },
     pause: _.throttle(function () {
       switch (this.state) {
         case 'initial':
         case 'stopped':
-          this.blackjacks = 0;
-          this.score = 0;
-          this.deckCount = 0;
-
-          this.cards.splice(0, this.cards.length);
-          this.generateDeck();
-          this.currentCard = null;
-
-          this.state = 'started';
-          this.main();
-          this.startLoop();
-          break;
+          this.blackjacks = 0
+          this.score = 0
+          this.deckCount = 0
+          this.cards.splice(0, this.cards.length)
+          this.generateDeck()
+          this.currentCard = null
+          this.state = 'started'
+          this.main()
+          this.startLoop()
+          break
         case 'started':
-          this.stopLoop();
-          this.state = 'paused';
-          break;
+          this.stopLoop()
+          this.state = 'paused'
+          break
         case 'paused':
-          this.startLoop();
-          this.state = 'started';
-          break;
+          this.startLoop()
+          this.state = 'started'
+          break
       }
     }, 1000, {trailing: false}),
-    left: function () {
+    left () {
       if (this.state == 'started' && this.currentCard) {
-        var card = this.currentCard;
+        let card = this.currentCard
         if (card.x > 0 && !this.findCard(card.x - 1, card.y)) {
-          card.x -= 1;
+          card.x -= 1
         }
       }
     },
-    right: function () {
+    right () {
       if (this.state == 'started' && this.currentCard) {
-        var card = this.currentCard;
+        let card = this.currentCard
         if (card.x < (this.cols - 1) && !this.findCard(card.x + 1, card.y)) {
-          card.x += 1;
+          card.x += 1
         }
       }
     },
-    down: function () {
+    down () {
       if (this.state == 'started') {
-        this.stopLoop();
+        this.stopLoop()
         if (this.currentCard) {
           for (;;) {
             if (!this.lowerCard(this.currentCard)) {
-              break;
+              break
             }
           }
         }
-        this.main();
+        this.main()
         if (this.state == 'started') {
-          this.startLoop();
+          this.startLoop()
         }
       }
     },
-    startLoop: function () {
-      this.stopLoop();
-      var self = this;
-      this.mainLoop = setInterval(function () {
-        self.main.call(self);
-      }, this.speed);
+    startLoop () {
+      this.stopLoop()
+      this.mainLoop = setInterval(() => this.main(), this.speed)
     },
-    stopLoop: function () {
+    stopLoop () {
       if (this.mainLoop) {
-        clearInterval(this.mainLoop);
+        clearInterval(this.mainLoop)
       }
     },
-    lowerCard: function (card) {
+    lowerCard (card) {
       if (card.y < (this.rows - 1) && !this.findCard(card.x, card.y + 1)) {
-        card.y += 1;
-        return true;
+        card.y += 1
+        return true
       }
-      return false;
+      return false
     },
-    generateDeck: function () {
-      var cards = [];
-      var deckCount = this.deckCount + 1;
+    generateDeck () {
+      let cards = []
+      let deckCount = this.deckCount + 1
       for (let i = 0; i < this.suits.length; i++) {
         for (let j = 0; j < this.ranks.length; j++) {
-          var rank = this.ranks[j];
-          var suit = this.suits[i];
+          let rank = this.ranks[j]
+          let suit = this.suits[i]
           cards.push({
             rank: rank,
             suit: suit,
             id: rank + '-' + suit + '-' + deckCount
-          });
+          })
         }
       }
-      var i = 0;
+      let i = 0
       while (cards.length > 0) {
-        var key = Math.floor(Math.random() * cards.length);
-        var card = cards[key];
-        card.value = this.cardValue(card);
-        card.deckRow = parseInt(i / this.cols, 10);
-        var reverse = card.deckRow % 2;
+        let key = Math.floor(Math.random() * cards.length)
+        let card = cards[key]
+        card.value = this.cardValue(card)
+        card.deckRow = parseInt(i / this.cols, 10)
+        let reverse = card.deckRow % 2
         if (reverse) {
-          card.x = Math.abs(i % this.cols - this.cols + 1);
+          card.x = Math.abs(i % this.cols - this.cols + 1)
         } else {
-          card.x = i % this.cols;
+          card.x = i % this.cols
         }
-        this.deck[i] = card;
-        cards.splice(key, 1);
-        i++;
+        this.deck[i] = card
+        cards.splice(key, 1)
+        i++
       }
-      this.deckCount = deckCount;
+      this.deckCount = deckCount
     },
-    removeCards: function (cards) {
+    removeCards (cards) {
       for (let key in cards) {
-        var card = cards[key];
-        this.cards.splice(this.cards.indexOf(card), 1);
+        let card = cards[key]
+        this.cards.splice(this.cards.indexOf(card), 1)
         for (let y = card.y - 1; y >= 0; y--) {
-          var cardAbove = this.findCard(card.x, y);
+          let cardAbove = this.findCard(card.x, y)
           if (cardAbove) {
-            this.lowerCard(cardAbove);
+            this.lowerCard(cardAbove)
           }
         }
       }
     },
-    findCard: function (x, y) {
-      return this.cards.find(function (card) {
-        return card.x == x && card.y == y;
-      });
+    findCard (x, y) {
+      return this.cards.find((card) => card.x == x && card.y == y)
     },
-    findBlackjack: function () {
+    findBlackjack () {
       for (let i = this.rows - 1; i >= 0; i--) {
         for (let j = 0; j < this.cols; j++) {
-          var sequence = [];
-          var sequenceSum = 0;
+          let sequence = []
+          let sequenceSum = 0
           for (let k = j; k < this.cols; k++) {
-            var card = this.findCard(k, i);
+            let card = this.findCard(k, i)
             if (card) {
-              sequence.push(card);
-              sequenceSum += card.value;
+              sequence.push(card)
+              sequenceSum += card.value
               if (sequenceSum == 21) {
-                return sequence;
+                return sequence
               }
               if (sequenceSum < 21) {
-                continue;
+                continue
               }
             }
-            sequence = [];
-            sequenceSum = 0;
+            sequence = []
+            sequenceSum = 0
           }
         }
       }
     },
-    cardValue: function (card) {
+    cardValue (card) {
       if (card.rank == 'J' || card.rank == 'Q' || card.rank == 'K') {
-        return 10;
+        return 10
       }
       if (card.rank == 'A') {
-        return 1;
+        return 1
       }
-      return parseInt(card.rank, 10);
+      return parseInt(card.rank, 10)
     },
-    addCard: function (card) {
+    addCard (card) {
       if (this.findCard(card.x, 0)) {
-        return false;
+        return false
       }
-      Vue.set(card, 'y', 0);
-      this.cards.push(card);
-      return true;
+      Vue.set(card, 'y', 0)
+      this.cards.push(card)
+      return true
     },
-    main: function () {
+    main () {
       if (this.state != 'started') {
-        this.state = 'started';
+        this.state = 'started'
       }
       if (this.currentCard && this.lowerCard(this.currentCard)) {
-        return;
+        return
       }
-      var blackjack = this.findBlackjack();
+      let blackjack = this.findBlackjack()
       if (blackjack) {
         this.blackjack = {
           x: blackjack[0].x,
           y: blackjack[0].y,
           length: blackjack.length
-        };
-        this.blackjacks += 1;
-        this.score += 21;
-        this.removeCards(blackjack);
-        this.currentCard = null;
-        return;
+        }
+        this.blackjacks += 1
+        this.score += 21
+        this.removeCards(blackjack)
+        this.currentCard = null
+        return
       }
-      this.blackjack = null;
-      this.currentCard = this.deck.pop();
+      this.blackjack = null
+      this.currentCard = this.deck.pop()
       if (!this.currentCard) {
-        this.generateDeck();
-        this.main();
-        return;
+        this.generateDeck()
+        this.main()
+        return
       }
       if (!this.addCard(this.currentCard)) {
-        this.stop();
-        return;
+        this.stop()
+        return
       }
     }
   }
