@@ -42,8 +42,6 @@ export default {
   },
   data () {
     return {
-      ranks: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'],
-      suits: ['spades', 'clubs', 'diamonds', 'hearts'],
       cols: 10,
       rows: 6,
       blackjacks: 0,
@@ -136,12 +134,14 @@ export default {
       return false
     },
     generateDeck () {
+      let ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
+      let suits = ['spades', 'clubs', 'diamonds', 'hearts']
       let cards = []
       let deckCount = this.deckCount + 1
-      for (let i = 0; i < this.suits.length; i++) {
-        for (let j = 0; j < this.ranks.length; j++) {
-          let rank = this.ranks[j]
-          let suit = this.suits[i]
+      for (let i = 0; i < suits.length; i++) {
+        for (let j = 0; j < ranks.length; j++) {
+          let rank = ranks[j]
+          let suit = suits[i]
           cards.push({
             rank: rank,
             suit: suit,
