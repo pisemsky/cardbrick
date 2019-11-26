@@ -1,9 +1,9 @@
 <template>
-  <div class="blackjack"></div>
+  <div class="hit"></div>
 </template>
 
 <style scoped>
-.blackjack {
+.hit {
   background-color: #ff0000;
 }
 </style>

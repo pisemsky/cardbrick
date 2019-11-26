@@ -7,7 +7,7 @@
     <div class="field">
       <game-table v-if="state == 'started'"
                   :cards="cards"
-                  :blackjack="blackjack"></game-table>
+                  :hit="hit"></game-table>
       <game-message v-if="state == 'initial'"
                     message="press P to play"></game-message>
       <game-message v-if="state == 'paused'"
@@ -15,8 +15,8 @@
       <game-message v-if="state == 'stopped'"
                     message="game over"></game-message>
     </div>
-    <game-status class="status-left" :mapping="{'deck': deckCount , 'speed': speed}"></game-status>
-    <game-status class="status-right" :mapping="{'score': score, 'blackjacks': blackjacks}"></game-status>
+    <game-status class="status-left" :mapping="{'level': level , 'speed': speed}"></game-status>
+    <game-status class="status-right" :mapping="{'score': score, 'hits': hits}"></game-status>
     <game-button class="button-nw" caption="L" @click.prevent="left()"></game-button>
     <game-button class="button-ne" caption="R" @click.prevent="right()"></game-button>
     <game-button class="button-se" caption="D" @click.prevent="down()"></game-button>
@@ -44,15 +44,15 @@ export default {
     return {
       cols: 10,
       rows: 6,
-      blackjacks: 0,
-      deckCount: 0,
+      hits: 0,
+      level: 0,
       score: 0,
       speed: 1000,
       deck: [],
       cards: [],
       currentCard: null,
       mainLoop: null,
-      blackjack: null,
+      hit: null,
       state: 'initial'
     }
   },
@@ -65,9 +65,9 @@ export default {
       switch (this.state) {
         case 'initial':
         case 'stopped':
-          this.blackjacks = 0
+          this.hits = 0
           this.score = 0
-          this.deckCount = 0
+          this.level = 0
           this.cards.splice(0, this.cards.length)
           this.generateDeck()
           this.currentCard = null
@@ -137,7 +137,7 @@ export default {
       let ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
       let suits = ['spades', 'clubs', 'diamonds', 'hearts']
       let cards = []
-      let deckCount = this.deckCount + 1
+      let level = this.level + 1
       for (let i = 0; i < suits.length; i++) {
         for (let j = 0; j < ranks.length; j++) {
           let rank = ranks[j]
@@ -145,7 +145,7 @@ export default {
           cards.push({
             rank: rank,
             suit: suit,
-            id: rank + '-' + suit + '-' + deckCount
+            id: rank + '-' + suit + '-' + level
           })
         }
       }
@@ -165,7 +165,7 @@ export default {
         cards.splice(key, 1)
         i++
       }
-      this.deckCount = deckCount
+      this.level = level
     },
     removeCards (cards) {
       for (let key in cards) {
@@ -182,7 +182,7 @@ export default {
     findCard (x, y) {
       return this.cards.find((card) => card.x == x && card.y == y)
     },
-    findBlackjack () {
+    findHit () {
       for (let i = this.rows - 1; i >= 0; i--) {
         for (let j = 0; j < this.cols; j++) {
           let sequence = []
@@ -229,20 +229,20 @@ export default {
       if (this.currentCard && this.lowerCard(this.currentCard)) {
         return
       }
-      let blackjack = this.findBlackjack()
-      if (blackjack) {
-        this.blackjack = {
-          x: blackjack[0].x,
-          y: blackjack[0].y,
-          length: blackjack.length
+      let hit = this.findHit()
+      if (hit) {
+        this.hit = {
+          x: hit[0].x,
+          y: hit[0].y,
+          length: hit.length
         }
-        this.blackjacks += 1
+        this.hits += 1
         this.score += 21
-        this.removeCards(blackjack)
+        this.removeCards(hit)
         this.currentCard = null
         return
       }
-      this.blackjack = null
+      this.hit = null
       this.currentCard = this.deck.pop()
       if (!this.currentCard) {
         this.generateDeck()

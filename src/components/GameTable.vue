@@ -4,9 +4,9 @@
                :key="card.id"
                :style="getCardStyle(card)"
                v-for="card in cards"></game-card>
-    <game-blackjack :blackjack="blackjack"
-                    :style="getBlackjackStyle(blackjack)"
-                    v-if="blackjack"></game-blackjack>
+    <game-hit :hit="hit"
+                    :style="getHitStyle(hit)"
+                    v-if="hit"></game-hit>
   </div>
 </template>
 
@@ -26,15 +26,15 @@
 
 <script>
 import GameCard from './GameCard.vue'
-import GameBlackjack from './GameBlackjack.vue'
+import GameHit from './GameHit.vue'
 
 export default {
   name: 'GameTable',
   components: {
     GameCard,
-    GameBlackjack
+    GameHit
   },
-  props: ['cards', 'blackjack'],
+  props: ['cards', 'hit'],
   methods: {
     getCardStyle (card) {
       return {
@@ -42,11 +42,11 @@ export default {
         'grid-row': card.y + 1
       }
     },
-    getBlackjackStyle (blackjack) {
+    getHitStyle (hit) {
       return {
-        'grid-column-start': blackjack.x + 1,
-        'grid-column-end': blackjack.x + 1 + blackjack.length,
-        'grid-row': blackjack.y + 1
+        'grid-column-start': hit.x + 1,
+        'grid-column-end': hit.x + 1 + hit.length,
+        'grid-row': hit.y + 1
       }
     }
   }
