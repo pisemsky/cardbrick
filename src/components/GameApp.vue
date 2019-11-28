@@ -1,5 +1,5 @@
 <template>
-  <game-screen v-bind="{state, cards, hit, level, speed, score, hits}"
+  <game-screen v-bind="{state, cards, hit, level, score, hits}"
                @pause="pause()"
                @down="down()"
                @right="right()"
@@ -10,6 +10,8 @@
 import Vue from 'vue'
 import _ from 'lodash'
 import GameScreen from './GameScreen.vue'
+
+const initialInterval = 1000;
 
 export default {
   name: 'GameApp',
@@ -23,7 +25,6 @@ export default {
       hits: 0,
       level: 0,
       score: 0,
-      speed: 1000,
       deck: [],
       cards: [],
       currentCard: null,
@@ -60,7 +61,7 @@ export default {
           this.state = 'started'
           break
       }
-    }, 1000, {trailing: false}),
+    }, initialInterval, {trailing: false}),
     left () {
       if (this.state == 'started' && this.currentCard) {
         let card = this.currentCard
@@ -95,7 +96,7 @@ export default {
     },
     startLoop () {
       this.stopLoop()
-      this.mainLoop = setInterval(() => this.main(), this.speed)
+      this.mainLoop = setInterval(() => this.main(), initialInterval)
     },
     stopLoop () {
       if (this.mainLoop) {

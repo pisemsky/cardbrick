@@ -12,18 +12,6 @@ Vue.config.keyCodes = {
   left: [37, 65]
 }
 
-Vue.filter('suffix', function (value) {
-  if (value == 1) {
-    return 'st'
-  } else if (value == 2) {
-    return 'nd'
-  } else if (value == 3) {
-    return 'rd'
-  } else {
-    return 'th'
-  }
-})
-
 Vue.directive('focus', {
   inserted: function (el) {
     el.focus()

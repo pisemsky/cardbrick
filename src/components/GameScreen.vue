@@ -5,18 +5,13 @@
        @keydown.right.prevent="right()"
        @keydown.left.prevent="left()">
     <div class="field">
-      <game-table v-if="state == 'started'"
-                  :cards="cards"
-                  :hit="hit"></game-table>
-      <game-message v-if="state == 'initial'"
-                    message="press P to play"></game-message>
-      <game-message v-if="state == 'paused'"
-                    message="pause"></game-message>
-      <game-message v-if="state == 'stopped'"
-                    message="game over"></game-message>
+      <game-table :cards="cards" :hit="hit" v-if="state == 'started'"></game-table>
+      <game-message message="press P to play" v-if="state == 'initial'"></game-message>
+      <game-message message="pause" v-if="state == 'paused'"></game-message>
+      <game-message message="game over" v-if="state == 'stopped'"></game-message>
     </div>
-    <game-status class="status-left" :mapping="{'level': level , 'speed': speed}"></game-status>
-    <game-status class="status-right" :mapping="{'score': score, 'hits': hits}"></game-status>
+    <game-status class="status-left" :mapping="{'hits': hits}"></game-status>
+    <game-status class="status-right" :mapping="{'score': score}"></game-status>
     <game-button class="button-nw" caption="L" @click.prevent="left()"></game-button>
     <game-button class="button-ne" caption="R" @click.prevent="right()"></game-button>
     <game-button class="button-se" caption="D" @click.prevent="down()"></game-button>
@@ -37,7 +32,6 @@ export default {
     'cards',
     'hit',
     'level',
-    'speed',
     'score',
     'hits',
   ],

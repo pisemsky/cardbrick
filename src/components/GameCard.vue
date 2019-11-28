@@ -1,5 +1,8 @@
 <template>
-  <div class="card" :class="card.suit">{{ card.rank }}</div>
+  <div class="card" :class="card.suit">
+    <div>{{ card.rank }}</div>
+    <div class="card-suit"></div>
+  </div>
 </template>
 
 <script>
@@ -18,24 +21,36 @@ export default {
   font-size: 1rem;
 }
 
+@media (orientation: landscape) {
+  .card {
+    flex-direction: row;
+  }
+}
+
+@media (orientation: portrait) {
+  .card {
+    flex-direction: column;
+  }
+}
+
 .card.diamonds,
 .card.hearts {
   color: #ff0000;
 }
 
-.card.spades:after {
+.card.spades .card-suit:after {
   content: '\2660';
 }
 
-.card.clubs:after {
+.card.clubs .card-suit:after {
   content: '\2663';
 }
 
-.card.diamonds:after {
+.card.diamonds .card-suit:after {
   content: '\2666';
 }
 
-.card.hearts:after {
+.card.hearts .card-suit:after {
   content: '\2665';
 }
 </style>
