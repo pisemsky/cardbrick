@@ -1,6 +1,10 @@
 {
-  "name": "game",
-  "version": "0.1.0",
+  "name": "cardbrick",
+  "version": "3.0.0",
+  "description": "cardbrick is a mix of a famous card game and a famous brick game.",
+  "homepage": "https://github.com/pisemsky/cardbrick",
+  "license" : "GPL-3.0-or-later",
+  "author": "Evgeny Pisemsky <evgeny@pisemsky.com>",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
